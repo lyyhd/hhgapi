@@ -34,15 +34,26 @@ Route::group(['middleware' => ['web']], function () {
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api) {
+    //文章相关api
     $api->group(['namespace' => 'Article'], function($api){
         require (__DIR__ . '/Routes/Article.php');
+    });
+    //公司相关api
+    $api->group(['namespace' => 'Company'], function($api){
+        require (__DIR__ . '/Routes/Company.php');
     });
     /**
      * 短信验证码
      */
-    $api->post('verify', [
+    //注册时发送
+    $api->post('sms/verify', [
         'as'        => 'sms.verify',
         'uses'      => 'Sms\SmsController@verify'
+    ]);
+    //忘记密码时发送
+    $api->post('sms/forget', [
+        'as'        => 'sms.forget',
+        'uses'      => 'Sms\SmsController@forget'
     ]);
     # Auth
     // 登录
@@ -55,12 +66,25 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
         'as'   => 'auth.signup',
         'uses' => 'AuthController@signup'
     ]);
-
+    /**
+     * 忘记密码
+     */
+    //确认手机号码
+    $api->post('customer/forget/verify',[
+        'as'    => 'customer.forgetVerify',
+        'uses'  => 'Customer\CustomerController@forgetVerify'
+    ]);
+    //修改新密码
+    $api->post('customer/forget/password',[
+        'as'    => 'customer.forgetPassword',
+        'uses'  => 'Customer\CustomerController@forgetPassword'
+    ]);
     //获取轮播图
     $api->get('carousel', [
         'as'    => 'carousel.index',
         'uses'  => 'Carousel\CarouselController@index'
     ]);
+
 
     // 需要jwt验证后才能使用的API
     $api->group(['middleware' => 'jwt.auth'], function ($api) {
@@ -87,10 +111,26 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
             'as'   => 'customer.password.update',
             'uses' => 'Customer\CustomerController@editPassword'
         ]);
+        //设置新密码
+        $api->post('customer/forget/password',[
+            'as'    => 'customer.forgetPassword',
+            'uses'  => 'Customer\CustomerController@forgetPassword'
+        ]);
+        //上传图片 临时
+        $api->post('customer/avatar',[
+            'as'    => 'customer.avatar',
+            'uses'  => 'Image\ImageController@avatar'
+        ]);
 
         //获取用户详情
         $api->get('/user/{userId}/detail/{detailId}',['as' => 'user.detail','uses' => 'Customer\DetailController@show']);
+        //获取我的公司
+        $api->get('/customer/{id}/company',['as' => 'customer.company','uses' => 'Customer\CustomerController@company']);
     });
 
+    $api->post('image/upload',[
+        'as'    => 'image.upload',
+        'uses'  => 'Image\ImageController@upload'
+    ]);
 
 });

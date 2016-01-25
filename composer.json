@@ -11,7 +11,9 @@
         "tymon/jwt-auth": "^0.5.5",
         "basicit/lumen-vendor-publish": "^1.0",
         "irazasyed/larasupport": "~1.0",
-        "toplan/laravel-sms": "~2.2.3"
+        "toplan/laravel-sms": "~2.2.3",
+        "intervention/image": "^2.3",
+        "barryvdh/laravel-debugbar": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

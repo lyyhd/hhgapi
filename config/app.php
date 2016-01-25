@@ -52,7 +52,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'UTC+8',
+//    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -169,6 +170,10 @@ return [
          */
         Toplan\PhpSms\PhpSmsServiceProvider::class,
         Toplan\Sms\SmsManagerServiceProvider::class,
+        //imageservice
+        Intervention\Image\ImageServiceProviderLaravel5::class,
+        //laravel debugger
+        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -221,6 +226,10 @@ return [
         //sms
         'PhpSms' => Toplan\PhpSms\Facades\Sms::class,
         'SmsManager' => Toplan\Sms\Facades\SmsManager::class,
+        //images
+        'Image'      => Intervention\Image\Facades\Image::class,
+        //laravel debugger
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
 

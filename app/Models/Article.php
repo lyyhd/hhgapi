@@ -31,5 +31,15 @@ class Article extends BaseModel
     }
     //阅读量+1
     //
+    //设置关联
+    public function content()
+    {
+        return $this->hasOne('App\Models\ArticleContent');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo('App\Models\ArticleType');
+    }
 
 }

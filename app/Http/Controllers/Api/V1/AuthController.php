@@ -74,18 +74,22 @@ class AuthController extends BaseController
             'verifyCode'    => "required|verify_code:$token|confirm_mobile_rule:mobile_required,$token"
         ], [
             'mobile.unique' => '该手机号码已被他人注册',
+            'verify_code'   => '验证码错误',
+            'confirm_mobile_not_change' => '当前手机号码与发送号码不符',
+            'confirm_mobile_rule' => '手机号码验证错误'
         ]);
 
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator->messages());
-        }
-
-        $mobile  = $this->request->get('mobile');
-        $password = $this->request->get('password');
-
+        if ($validator->fails())return $this->errorBadRequest($validator->messages());
+        //设置用户相关信息
+        $mobile     = $this->request->get('mobile');
+        $password   = $this->request->get('password');
+        //TODO用户类型 设置默认为3游客 1为创业者2为投资人
+        $type       = $this->request->has('type') ? $this->request->has('type') : 3;
+        //TODO 其他信息
         $customer = new Customer;
-        $customer->mobile = $mobile;
+        $customer->mobile   = $mobile;
         $customer->password = bcrypt($password);
+        $customer->type     = $type;
         $customer->save();
 
         // 用户注册事件

@@ -22,4 +22,14 @@ class Customer extends BaseModel implements AuthenticatableContract
 
     // 可填充的字段
     protected $fillable = ['name'];
+
+    public function getCustomerByMobile($mobile)
+    {
+        return $this->where('mobile',$mobile)->first();
+    }
+
+    public function company()
+    {
+        return $this->hasOne('App\Models\Company\Company');
+    }
 }

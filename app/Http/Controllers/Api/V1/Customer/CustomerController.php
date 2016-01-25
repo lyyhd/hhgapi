@@ -8,10 +8,20 @@ namespace App\Http\Controllers\Api\V1\Customer;
  */
 
 use \App\Http\Controllers\Api\BaseController;
+use App\Models\Company\Company;
+use App\Models\Customer;
 use App\Transformer\CustomerTransformer;
+use Illuminate\Http\Request;
 
 class CustomerController extends BaseController
 {
+    protected $modelCustomer;
+    public function __construct(Request $request,Customer $modelCustomer)
+    {
+        parent::__construct($request);
+        $this->modelCustomer = $modelCustomer;
+    }
+
     /**
      * @api {get} /customer 当前用户信息
      * @apiDescription 当前用户信息
@@ -63,6 +73,53 @@ class CustomerController extends BaseController
         $user->save();
 
         return $this->response->item($user, new CustomerTransformer);
+    }
+    /**
+     *忘记密码 检查verify code
+     */
+    public function forgetVerify()
+    {
+        $token = $this->request->get('token');
+        $validator = \Validator::make($this->request->all(), [
+            'mobile'    => "required|exists:customers",
+            'verifyCode'    => "required|verify_code:$token|confirm_mobile_rule:mobile_required,$token"
+        ], [
+            'mobile.required'           => '缺少手机号码字段',
+            'mobile.exists'             => '手机号码不存在',
+            'verifyCode.required'       => '缺少验证码字段',
+            'verify_code'               => '验证码错误',
+            'confirm_mobile_not_change' => 'smsToken错误',
+            'confirm_mobile_rule'       => '验证失败'
+        ]);
+        if ($validator->fails())return $this->errorBadRequest($validator->messages());
+        //验证通过
+        $customer = $this->modelCustomer->getCustomerByMobile($this->request->get('mobile'));
+        //设置用户为登录状态
+        $token = \JWTAuth::fromUser($customer);
+        $result = return_message(true,'验证通过');
+        return compact('token','result');
+    }
+    /**
+     * 修改密码
+     */
+    public function forgetPassword()
+    {
+        $validator = \Validator::make($this->request->all(), [
+            'password'              => 'required|confirmed',
+            'password_confirmation' => 'required|same:password',
+        ], [
+            'password.confirmed'         => '两次输入的密码不一致',
+            'password_confirmation.same' => '两次输入的密码不一致',
+        ]);
+
+        if($validator->fails()) return $this->errorBadRequest($validator->messages());
+        //变更密码
+        $customer = $this->user();
+        $customer->password = bcrypt($this->request->get('password'));
+        $customer->save();
+
+        return $customer;
+
     }
     /**
      * @api {put} /user/password 修改密码
@@ -126,8 +183,22 @@ class CustomerController extends BaseController
         return $this->response->noContent();
     }
 
+    //上传头像
+
     //完善用户个人信息
     //找回密码
     //注册
     //发送验证码
+
+    //我的公司
+    /**
+     * @param $id 用户id
+     * @return Customer
+     */
+    public function company($id,Company $company)
+    {
+        return $company->searchCustomer($id)
+            ->withOnly('field',['id','name'])//查询公司领域
+            ->first();
+    }
 }

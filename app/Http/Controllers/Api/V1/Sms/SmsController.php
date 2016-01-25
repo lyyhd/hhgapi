@@ -53,6 +53,44 @@ class SmsController extends BaseController
         return $this->sendMessage($this->request->get('mobile'),$token,$tem_id,$deadline_time,array($verfiy_code));
     }
 
+    /**
+     * @return array
+     * 找回密码发送短信
+     * post
+     * mobile手机号码
+     * code 验证码
+     * deadLineTime过期时间
+     * data[]参数集合
+     *
+     */
+    public function forget()
+    {
+        $validator = Validator::make($this->request->all(),[
+            'mobile'        => 'required|exists:customers',
+        ],[
+            'mobile.exists' => '手机号码未注册账户',
+        ]);
+        //验证传入字段是否存在错误
+        if($validator->fails()) return return_message('false', $validator->errors()->all());
+        //发送验证码短信
+        $verfiy_code        = (string)$this->generate_code(4);
+        //设置短信模板id
+        $tem_id             = '2289011';
+        //设置短信过期时间
+        $deadline_time      = 60;
+        //TODO模板参数
+        $token = $this->ttpassv2($this->request->get('mobile').'verify',time());
+        return $this->sendMessage($this->request->get('mobile'),$token,$tem_id,$deadline_time,array($verfiy_code));
+    }
+
+    /**
+     * 验证验证码
+     */
+    public function checkVerify()
+    {
+
+    }
+
     //生成随机验证码
     private function generate_code($length = 6) {
         return rand(pow(10,($length-1)), pow(10,$length)-1);
@@ -74,10 +112,11 @@ class SmsController extends BaseController
      * @param $temId 短信模板id
      * @param array $data 短信参数
      */
-    private function sendMessage($mobile,$token = null,$deadline_time = 60,$temId,$data = array())
+    private function sendMessage($mobile,$token = null,$temId,$deadline_time = 60,$data = array())
     {
         $code = $data[0];
-        $result = 's';
+//        $result = PhpSms::make()->to($mobile)->template($this->smsTemplate, $temId)->data($data)->send();
+        $result = 'true';
         //设置过期时间
         $deadline_time += time();
         \SmsManager::storeSentInfo($token,compact('mobile','code','deadline_time'));
