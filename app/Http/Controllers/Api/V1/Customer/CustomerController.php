@@ -11,6 +11,7 @@ use \App\Http\Controllers\Api\BaseController;
 use App\Models\Company\Company;
 use App\Models\Customer;
 use App\Transformer\CustomerTransformer;
+use Goodspb\LaravelEasemob\Facades\Easemob;
 use Illuminate\Http\Request;
 
 class CustomerController extends BaseController
@@ -43,7 +44,10 @@ class CustomerController extends BaseController
      */
     public function show()
     {
-        return $this->response->item($this->user(), new CustomerTransformer);
+        $user = $this->modelCustomer->with('company')->find($this->user()->id);
+
+        //return $this->response->item($user, new CustomerTransformer);
+        return return_rest('1',compact('user'),'获取成功');
     }
 
     /**
@@ -79,25 +83,39 @@ class CustomerController extends BaseController
      */
     public function forgetVerify()
     {
-        $token = $this->request->get('token');
+        $token = $this->request->get('smsToken');
         $validator = \Validator::make($this->request->all(), [
             'mobile'    => "required|exists:customers",
             'verifyCode'    => "required|verify_code:$token|confirm_mobile_rule:mobile_required,$token"
         ], [
             'mobile.required'           => '缺少手机号码字段',
-            'mobile.exists'             => '手机号码不存在',
+            'mobile.exists'             => '手机号码未注册',
             'verifyCode.required'       => '缺少验证码字段',
             'verify_code'               => '验证码错误',
-            'confirm_mobile_not_change' => 'smsToken错误',
+            'confirm_mobile_not_change' => '手机号码与发送验证码手机不符',
             'confirm_mobile_rule'       => '验证失败'
         ]);
-        if ($validator->fails())return $this->errorBadRequest($validator->messages());
+        $messages = $validator->messages();
+        if($messages->has('mobile')){
+            $mobiles_rule = $messages->get('mobile');
+            foreach($mobiles_rule as $mobile_rule){
+                if($mobile_rule === '手机号码未注册') return return_rest('0','','手机号码未注册');
+            }
+            return return_rest(0,'','手机号码输入有误');
+        }
+        if($messages->has('verifyCode')){
+            $verifyCodes_rule = $messages->get('verifyCode');
+            foreach($verifyCodes_rule as $verifyCode_rule){
+                if($verifyCode_rule === '手机号码与发送验证码手机不符') return return_rest(0,'','手机号码与发送验证码手机不符');
+            }
+            return return_rest(0,'','验证码错误');
+        }
+
         //验证通过
         $customer = $this->modelCustomer->getCustomerByMobile($this->request->get('mobile'));
         //设置用户为登录状态
         $token = \JWTAuth::fromUser($customer);
-        $result = return_message(true,'验证通过');
-        return compact('token','result');
+        return return_rest(1,compact('token'),'验证成功');
     }
     /**
      * 修改密码
@@ -105,20 +123,20 @@ class CustomerController extends BaseController
     public function forgetPassword()
     {
         $validator = \Validator::make($this->request->all(), [
-            'password'              => 'required|confirmed',
-            'password_confirmation' => 'required|same:password',
-        ], [
-            'password.confirmed'         => '两次输入的密码不一致',
-            'password_confirmation.same' => '两次输入的密码不一致',
+            'password'              => 'required',
         ]);
 
-        if($validator->fails()) return $this->errorBadRequest($validator->messages());
+        if($validator->fails()){
+            if($validator->messages()->get('password')[0]) return return_rest('0','','修改密码失败');
+        }
         //变更密码
         $customer = $this->user();
         $customer->password = bcrypt($this->request->get('password'));
-        $customer->save();
+        if($customer->save()){
+            return return_rest('1','','密码修改成功');
+        }
 
-        return $customer;
+        return return_rest('0','','密码修改失败');
 
     }
     /**

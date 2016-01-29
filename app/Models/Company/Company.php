@@ -34,6 +34,11 @@ class Company extends BaseModel
         return $this->belongsTo('App\Models\Customer');
     }
 
+    public function finance()
+    {
+        return $this->belongsTo('App\Models\Company\CompanyFinance','finance_status','status');
+    }
+
     public function scopeStatus($query)
     {
         return $query->where('status',1);

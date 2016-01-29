@@ -174,6 +174,8 @@ return [
         Intervention\Image\ImageServiceProviderLaravel5::class,
         //laravel debugger
         Barryvdh\Debugbar\ServiceProvider::class,
+        //环信
+        Goodspb\LaravelEasemob\LaravelEasemobServiceProvider::class,
     ],
 
     /*
@@ -230,7 +232,8 @@ return [
         'Image'      => Intervention\Image\Facades\Image::class,
         //laravel debugger
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
-
+        //环信
+        'Easemob'  => Goodspb\LaravelEasemob\Facades\Easemob::class,
     ],
 
 ];

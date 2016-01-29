@@ -69,7 +69,7 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     /**
      * 忘记密码
      */
-    //确认手机号码
+    //确认忘记密码信息
     $api->post('customer/forget/verify',[
         'as'    => 'customer.forgetVerify',
         'uses'  => 'Customer\CustomerController@forgetVerify'

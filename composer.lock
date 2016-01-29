@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "19afff0b8c7f6da15633e3ef1432ea0e",
-    "content-hash": "bd1f281f5179e07b5da726ea3dee619f",
+    "hash": "12edeccc211cf6d47ef68c7663b2e806",
+    "content-hash": "ef0c3f01d51bce471d09b591a2efeb97",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -512,6 +512,39 @@
                 "parser"
             ],
             "time": "2014-09-09 13:34:57"
+        },
+        {
+            "name": "goodspb/laravel-easemob",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/goodspb/laravel-easemob.git",
+                "reference": "447c0a765b0dd82bdf25e604f7eb805d8b6b0dc2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "http://packagist.phpcomposer.com/files/goodspb/laravel-easemob/447c0a765b0dd82bdf25e604f7eb805d8b6b0dc2.zip",
+                "reference": "447c0a765b0dd82bdf25e604f7eb805d8b6b0dc2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Goodspb\\LaravelEasemob\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "goodspb",
+                    "email": "goodspbluo@gmail.com"
+                }
+            ],
+            "description": "easemob client for laravel",
+            "time": "2015-09-21 09:45:01"
         },
         {
             "name": "guzzlehttp/psr7",
