@@ -44,9 +44,10 @@ class CustomerController extends BaseController
      */
     public function show()
     {
-        $user = $this->modelCustomer->with('company')->find($this->user()->id);
+        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex')->withOnly('company',array('id','customer_id','name','website','finance_status'))->find($this->user()->id);
 
-        //return $this->response->item($user, new CustomerTransformer);
+//        return $this->response->item($user, new CustomerTransformer);
+        $user = $user->toArray();
         return return_rest('1',compact('user'),'获取成功');
     }
 
@@ -70,13 +71,16 @@ class CustomerController extends BaseController
      */
     public function update()
     {
-        $user = $this->me();
+        $user = $this->user();
 
         $user->fill($this->request->input());
 
-        $user->save();
+        if($user->save()){
+            return return_rest('1','','更新成功');
+        }
+        return return_rest('0','','更新失败');
+        //return $this->response->item($user, new CustomerTransformer);
 
-        return $this->response->item($user, new CustomerTransformer);
     }
     /**
      *忘记密码 检查verify code
@@ -101,21 +105,21 @@ class CustomerController extends BaseController
             foreach($mobiles_rule as $mobile_rule){
                 if($mobile_rule === '手机号码未注册') return return_rest('0','','手机号码未注册');
             }
-            return return_rest(0,'','手机号码输入有误');
+            return return_rest('0','','手机号码输入有误');
         }
         if($messages->has('verifyCode')){
             $verifyCodes_rule = $messages->get('verifyCode');
             foreach($verifyCodes_rule as $verifyCode_rule){
                 if($verifyCode_rule === '手机号码与发送验证码手机不符') return return_rest(0,'','手机号码与发送验证码手机不符');
             }
-            return return_rest(0,'','验证码错误');
+            return return_rest('0','','验证码错误');
         }
 
         //验证通过
         $customer = $this->modelCustomer->getCustomerByMobile($this->request->get('mobile'));
         //设置用户为登录状态
         $token = \JWTAuth::fromUser($customer);
-        return return_rest(1,compact('token'),'验证成功');
+        return return_rest('1',compact('token'),'验证成功');
     }
     /**
      * 修改密码
@@ -167,7 +171,7 @@ class CustomerController extends BaseController
      */
     public function editPassword()
     {
-        $customer = $this->me();
+        $customer = $this->user();
 
         $validator = \Validator::make($this->request->all(), [
             'old_password'          => 'required',
@@ -204,9 +208,6 @@ class CustomerController extends BaseController
     //上传头像
 
     //完善用户个人信息
-    //找回密码
-    //注册
-    //发送验证码
 
     //我的公司
     /**

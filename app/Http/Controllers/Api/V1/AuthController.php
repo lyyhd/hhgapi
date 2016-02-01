@@ -31,7 +31,7 @@ class AuthController extends BaseController
 //                //$validator->errors()->add('error_msg', '用户名或密码错误');
 //                return $this->errorBadRequest(return_rest('0','','用户名或密码错误','10021'));
 //            });
-            return $this->errorBadRequest(return_rest('0','','用户名或密码错误'));
+            return return_rest('0','','用户名或密码错误');
         }
 
         if ($validator->fails()) {
@@ -41,10 +41,11 @@ class AuthController extends BaseController
             foreach($mobiles as $mobile){
                 if($mobile == 'The selected mobile is invalid.') return $this->errorBadRequest(return_rest('0','','手机号码未注册'));
             }
-            return $this->errorBadRequest(return_rest('0','','请按照规则输入手机号码'));
+            return return_rest('0','','请按照规则输入手机号码');
         }
-
-        return return_rest(1,array('token' => $token),'登陆成功');
+        //登录成功 获取用户信息
+        $customer = Customer::select('type','name','nickname')->where('mobile',$this->request->get('mobile'))->first();
+        return return_rest('1',compact('token','customer'),'登陆成功');
     }
 
     public function refreshToken()
@@ -72,20 +73,20 @@ class AuthController extends BaseController
         if($messages->has('mobile')){
             $mobiles_rule = $messages->get('mobile');
             foreach($mobiles_rule as $mobile_rule){
-                if($mobile_rule == '当前手机号码与发送号码不符') return $this->errorBadRequest(return_rest('0','','当前手机号码与发送号码不符'));
+                if($mobile_rule == '当前手机号码与发送号码不符') return return_rest('0','','当前手机号码与发送号码不符');
             }
         }
         if($messages->has('verifyCode')){
             $verifyCodes = $messages->get('verifyCode');
             foreach($verifyCodes as $verifyCode){
-                if($verifyCode == '验证码错误') return $this->errorBadRequest(return_rest('0','','验证码错误'));
-                if($verifyCode == '验证码验证错误') return $this->errorBadRequest(return_rest('0','','验证码验证错误'));
+                if($verifyCode == '验证码错误') return return_rest('0','','验证码错误');
+                if($verifyCode == '验证码验证错误') return return_rest('0','','验证码验证错误');
             }
         }
         //增加环信注册 失败返回false
         $easemob = Easemob::user_register($this->request->get('mobile'),$this->request->get('password'));
         //TODO
-        if(isset($easemob['mobile'])) return $this->errorBadRequest(return_rest('0','','该用户已注册环信'));
+        if(isset($easemob['mobile'])) return return_rest('0','','该用户已注册环信');
         //设置用户相关信息
         $mobile     = $this->request->get('mobile');
         $password   = $this->request->get('password');

@@ -19,6 +19,9 @@ class Company extends BaseModel
 
     protected $dates = ['deleted_at'];
 
+    // 可填充的字段
+    protected $fillable = ['contract','address'];
+
     public function field()
     {
         return $this->belongsTo('App\Models\Company\CompanyField');

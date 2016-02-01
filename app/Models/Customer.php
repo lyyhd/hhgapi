@@ -21,7 +21,7 @@ class Customer extends BaseModel implements AuthenticatableContract
     protected $hidden = ['password'];
 
     // 可填充的字段
-    protected $fillable = ['name'];
+    protected $fillable = ['name','sex','email','nickname','brief'];
 
     public function getCustomerByMobile($mobile)
     {

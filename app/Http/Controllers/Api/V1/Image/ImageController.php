@@ -56,17 +56,17 @@ class ImageController extends BaseController
 
         //TODO 获取手机号码
         $customer = $this->user();
-        $fileName = md5($customer->mobile);
+        $fileName = $customer->mobile;
         $file = $this->avatar_path.$fileName.'.jpg';
         try {
             \Image::make($this->request->file('avatar'))->resize(100,100)->save($file);
             //添加进入数据库
             $customer->avatar = $file;
             $customer->save();
-            return return_message(true,'上传成功');
+            return return_rest('1',compact('file'),'头像上传成功');
         }catch (\Exception $e){
             //图片上传失败
-            return return_message(false,$e->getMessage());
+            return return_rest('0','',$e->getMessage());
         }
     }
 

@@ -18,13 +18,13 @@ use Illuminate\Http\Request;
 
 class CompanyController extends BaseController
 {
-    protected $model_company;
+    protected $company;
 
-    public function __construct(Request $request,Company $model_company)
+    public function __construct(Request $request,Company $company)
     {
         parent::__construct($request);
 
-        $this->model_company = $model_company;
+        $this->company = $company;
     }
 
     /**
@@ -33,7 +33,7 @@ class CompanyController extends BaseController
     public function index()
     {
         //判断是否有搜索条件
-        $company = $this->model_company
+        $company = $this->company
             ->status()
             ->searchField($this->request->get('field'))//根据领域
             ->searchFinance($this->request->get('finance'))//根据融资状态
@@ -46,5 +46,32 @@ class CompanyController extends BaseController
 
     //获取我的项目
 //    public function
+    /**
+     * 更新信息
+     * public function update()
+    {
+    $user = $this->user();
 
+    $user->fill($this->request->input());
+
+    $user->save();
+
+    //return $this->response->item($user, new CustomerTransformer);
+    return return_rest(1,'','更新成功');
+    }
+     */
+    public function update(){
+        //获取登录用户信息
+        $user = $this->user();
+        //获取用户公司信息
+        if(!$company = $this->company->where('customer_id',$user->id)->first()){
+            return return_rest('0','','该用户没有公司');
+        }
+        //获取更新信息
+        $company->fill($this->request->input());
+        if($company->save()){
+            return return_rest('1','','更新成功');
+        }
+        return return_rest('0','','更新失败');
+    }
 }
