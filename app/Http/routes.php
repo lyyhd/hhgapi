@@ -38,6 +38,11 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     $api->group(['namespace' => 'Article'], function($api){
         require (__DIR__ . '/Routes/Article.php');
     });
+    //活动相关api
+    //文章相关api
+    $api->group(['namespace' => 'Activity'], function($api){
+        require (__DIR__ . '/Routes/Activity.php');
+    });
     //公司相关api
     $api->group(['namespace' => 'Company'], function($api){
         require (__DIR__ . '/Routes/Company.php');
