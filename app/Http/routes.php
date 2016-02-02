@@ -66,6 +66,11 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
         'as'   => 'auth.signup',
         'uses' => 'AuthController@signup'
     ]);
+    //退出
+    $api->post('auth/logout',[
+       'as'     => 'auth.logout',
+        'uses'  => 'AuthController@logout'
+    ]);
     /**
      * 忘记密码
      */
@@ -73,11 +78,6 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     $api->post('customer/forget/verify',[
         'as'    => 'customer.forgetVerify',
         'uses'  => 'Customer\CustomerController@forgetVerify'
-    ]);
-    //修改新密码
-    $api->post('customer/forget/password',[
-        'as'    => 'customer.forgetPassword',
-        'uses'  => 'Customer\CustomerController@forgetPassword'
     ]);
     //获取轮播图
     $api->get('carousel', [
@@ -120,6 +120,16 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
         $api->post('customer/avatar',[
             'as'    => 'customer.avatar',
             'uses'  => 'Image\ImageController@avatar'
+        ]);
+        //修改新密码
+        $api->post('customer/forget/password',[
+            'as'    => 'customer.forgetPassword',
+            'uses'  => 'Customer\CustomerController@forgetPassword'
+        ]);
+        //获取联系人列表
+        $api->post('customer/contract',[
+            'as'    => 'customer.contract',
+            'uses'  => 'Customer\CustomerController@contract'
         ]);
 
         //获取用户详情

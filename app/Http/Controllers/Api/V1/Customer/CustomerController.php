@@ -13,6 +13,7 @@ use App\Models\Customer;
 use App\Transformer\CustomerTransformer;
 use Goodspb\LaravelEasemob\Facades\Easemob;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CustomerController extends BaseController
 {
@@ -44,7 +45,9 @@ class CustomerController extends BaseController
      */
     public function show()
     {
-        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex')->withOnly('company',array('id','customer_id','name','website','finance_status'))->find($this->user()->id);
+        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address')
+            ->withOnly('company',array('id','customer_id','name','website','finance_status','position','weixin'))
+            ->find($this->user()->id);
 
 //        return $this->response->item($user, new CustomerTransformer);
         $user = $user->toArray();
@@ -131,10 +134,15 @@ class CustomerController extends BaseController
         ]);
 
         if($validator->fails()){
-            if($validator->messages()->get('password')[0]) return return_rest('0','','修改密码失败');
+            if($validator->messages()->get('password')[0] === 'The password field is required.') return return_rest('0','','密码提供信息不正确');
         }
+
         //变更密码
         $customer = $this->user();
+        //变更环信密码
+        $easemob_reset_password = Easemob::reset_password($customer->mobile,$this->request->get('password'));
+        if(!$easemob_reset_password) return return_rest('0','','环信密码修改失败');
+        //更新数据库密码
         $customer->password = bcrypt($this->request->get('password'));
         if($customer->save()){
             return return_rest('1','','密码修改成功');
@@ -219,5 +227,27 @@ class CustomerController extends BaseController
         return $company->searchCustomer($id)
             ->withOnly('field',['id','name'])//查询公司领域
             ->first();
+    }
+
+    /**
+     * 联系人列表
+     *
+     */
+    public function contract()
+    {
+        //解析数据
+        $mobileList = $this->request->input('mobilelist');
+
+        $mobileList = json_decode($mobileList,true);
+        $mobiles = array();
+
+        foreach ($mobileList as $list){
+            foreach ($list as $key => $val){
+                array_push($mobiles,$val);
+            }
+        }
+        $list = $this->modelCustomer->select('name','mobile')->whereIn('mobile',$mobiles)->get()->toArray();
+
+        return return_rest('1',compact('list'),'获取列表成功');
     }
 }

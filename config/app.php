@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC+8',
+    'timezone' => 'Asia/Shanghai',
 //    'timezone' => 'UTC',
 
     /*

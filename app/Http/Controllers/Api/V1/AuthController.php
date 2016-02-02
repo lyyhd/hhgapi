@@ -54,6 +54,19 @@ class AuthController extends BaseController
         return $this->response->array(['token' => $newToken]);
     }
 
+    public function logout()
+    {
+        //获取当前用户token
+        $token = \JWTAuth::getToken();
+        //让token失效
+        try{
+            \JWTAuth::invalidate($token);
+            return return_rest('1','','已退出登录');
+        }catch (\Exception $e){
+            return return_rest('0','',$e->getMessage());
+        }
+    }
+
     /**
      * 昵称 type
      */
