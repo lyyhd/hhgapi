@@ -47,8 +47,9 @@ class ActivityController extends BaseController
     /**
      * 获取活动详情
      */
-    public function detail($id)
+    public function detail()
     {
+        $id = $this->request->get('id');
         try{
             $activity = $this->activity->select('id','title','image','content','created_at')->findOrFail($id)->toArray();
         }catch (\Exception $e){
@@ -62,8 +63,9 @@ class ActivityController extends BaseController
     /**
      * 检查当前用户是否关注活动
      */
-    public function checkAttention($id)
+    public function checkAttention()
     {
+        $id = $this->request->get('id');
         //判断活动是否存在并获取活动id
         try{
             $activity = $this->activity->findOrFail($id);
@@ -82,8 +84,9 @@ class ActivityController extends BaseController
     /**
      * 用户进行取消关注 关注操作
      */
-    public function doAttention($id)
+    public function doAttention()
     {
+        $id = $this->request->get('id');
         //判断活动是否存在并获取活动id
         try{
             $activity = $this->activity->findOrFail($id);
