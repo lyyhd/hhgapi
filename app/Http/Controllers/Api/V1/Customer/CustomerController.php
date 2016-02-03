@@ -51,6 +51,7 @@ class CustomerController extends BaseController
 
 //        return $this->response->item($user, new CustomerTransformer);
         $user = $user->toArray();
+        $user['company'] = is_null($user['company']) ? "" : $user['company'];
         return return_rest('1',compact('user'),'获取成功');
     }
 
