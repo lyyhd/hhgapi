@@ -240,12 +240,16 @@ class CustomerController extends BaseController
 
         $mobileList = json_decode($mobileList,true);
         $mobiles = array();
-
-        foreach ($mobileList as $list){
-            foreach ($list as $key => $val){
-                array_push($mobiles,$val);
+        try{
+            foreach ($mobileList as $list){
+                foreach ($list as $key => $val){
+                    array_push($mobiles,$val);
+                }
             }
+        }catch(\Exception $e){
+            return return_rest('0','',$e->getMessage());
         }
+
         $list = $this->modelCustomer->select('name','mobile')->whereIn('mobile',$mobiles)->get()->toArray();
 
         return return_rest('1',compact('list'),'获取列表成功');
