@@ -209,6 +209,7 @@ class ActivityController extends BaseController
         $comment->content = $content;
         $comment->customer_id = $this->user()->id;
         $comment->customer_name = $this->user()->name;
+        $comment->mobile = $this->user()->mobile;
         if($comment->save()){
             //获取评论列表c
             return return_rest('1','','评论添加成功');
@@ -223,7 +224,7 @@ class ActivityController extends BaseController
         //获取活动id
         $id = $this->request->get('id');
         //根据活动id获取相关评论
-        $comments = ActivityComment::select('content','customer_name','created_at')
+        $comments = ActivityComment::select('content','customer_name','created_at','mobile')
             ->where('activity_id',$id)
             ->orderBy('created_at','desc')
             ->get()
