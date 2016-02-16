@@ -82,7 +82,14 @@ class ActivityController extends BaseController
         }
         return return_rest('1',array('attention' => '0'), '用户未关注该活动');
     }
-
+    /**
+     * 获取用户关注列表
+     */
+    public function attentionList()
+    {
+        $attentionList = ActivityCustomerAttention::where('customer_id',$this->user()->id)->activity()->orderBy('created_at')->get()->toArray();
+        //return return_rest(1,compact('attentionList'),'获取列表成功');
+    }
     /**
      * 用户进行取消关注 关注操作
      */
@@ -199,9 +206,9 @@ class ActivityController extends BaseController
         $comment->customer_name = $this->user()->name;
         if($comment->save()){
             //获取评论列表c
-            return return_rest(1,'','评论添加成功');
+            return return_rest('1','','评论添加成功');
         }
-        return return_rest(0,'','评论添加失败');
+        return return_rest('0','','评论添加失败');
     }
     /**
      * 获取活动评论
@@ -216,6 +223,6 @@ class ActivityController extends BaseController
             ->orderBy('created_at','desc')
             ->get()
             ->toArray();
-        return return_rest(1,compact('comments'),'操作成功');
+        return return_rest('1',compact('comments'),'操作成功');
     }
 }
