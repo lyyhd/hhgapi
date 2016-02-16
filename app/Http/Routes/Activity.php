@@ -20,4 +20,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->post('activity/collect', ['as' => 'activity.postCollect', 'uses' => 'ActivityController@doCollect']);
     //添加评论
     $api->post('activity/comment','ActivityController@addComment')->name('activity.addComment');
+    //获取关注列表
+    $api->get('activity/attentionList','ActivityController@attentionList')->name('activity.attentionList');
 });

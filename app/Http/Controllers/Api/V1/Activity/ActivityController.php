@@ -14,7 +14,9 @@ use App\Models\Activity\Activity;
 use App\Models\Activity\ActivityComment;
 use App\Models\Activity\ActivityCustomerAttention;
 use App\Models\Activity\ActivityCustomerCollect;
+use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ActivityController extends BaseController
 {
@@ -87,8 +89,11 @@ class ActivityController extends BaseController
      */
     public function attentionList()
     {
-        $attentionList = ActivityCustomerAttention::where('customer_id',$this->user()->id)->activity()->orderBy('created_at')->get()->toArray();
-        //return return_rest(1,compact('attentionList'),'获取列表成功');
+        $attentionList = Customer::select('id')->where('id',$this->user()->id)->with('activity')->get()->toArray();
+        if($attentionList){
+            return return_rest(1,compact('attentionList'),'获取列表成功');
+        }
+        return return_rest(1,compact('attentionList'),'用户暂未关注活动');
     }
     /**
      * 用户进行取消关注 关注操作

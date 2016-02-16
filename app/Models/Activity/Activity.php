@@ -24,5 +24,8 @@ class Activity extends BaseModel
     {
         return $this->belongsToMany('App\Models\customer','activity_customer_collect');
     }
-    //获取评论
+    public function customer()
+    {
+        return $this->belongsTo('App\Models\customer');
+    }
 }
