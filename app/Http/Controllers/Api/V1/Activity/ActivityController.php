@@ -91,9 +91,9 @@ class ActivityController extends BaseController
     {
         $attentionList = Customer::select('id')->where('id',$this->user()->id)->with('activity')->get()->toArray();
         if($attentionList){
-            return return_rest(1,compact('attentionList'),'获取列表成功');
+            return return_rest('1',compact('attentionList'),'获取列表成功');
         }
-        return return_rest(1,compact('attentionList'),'用户暂未关注活动');
+        return return_rest('1',compact('attentionList'),'用户暂未关注活动');
     }
     /**
      * 用户进行取消关注 关注操作
