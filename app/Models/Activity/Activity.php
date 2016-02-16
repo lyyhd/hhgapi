@@ -20,4 +20,9 @@ class Activity extends BaseModel
     {
         return $this->belongsToMany('App\Models\customer','activity_customer_attention');
     }
+    public function customer_collect()
+    {
+        return $this->belongsToMany('App\Models\customer','activity_customer_collect');
+    }
+    //获取评论
 }
