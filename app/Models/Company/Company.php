@@ -20,7 +20,7 @@ class Company extends BaseModel
     protected $dates = ['deleted_at'];
 
     // 可填充的字段
-    protected $fillable = ['contract','address','finance_status'];
+    protected $fillable = ['contract','address','finance_status','website','email'];
 
     public function field()
     {
