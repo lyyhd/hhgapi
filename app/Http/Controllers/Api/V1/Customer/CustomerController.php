@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Api\V1\Customer;
  */
 
 use \App\Http\Controllers\Api\BaseController;
+use App\Jobs\ChangeName;
 use App\Models\Company\Company;
 use App\Models\Customer;
 use App\Transformer\CustomerTransformer;
@@ -107,6 +108,13 @@ class CustomerController extends BaseController
         $user->fill($this->request->input());
 
         if($user->save()){
+            //判断是否为更新name
+            if($this->request->has('name')){
+                //执行更换名称任务
+                $changeName = new ChangeName($user->id);
+                $this->dispatch($changeName);
+            }
+
             return return_rest('1','','更新成功');
         }
         return return_rest('0','','更新失败');
