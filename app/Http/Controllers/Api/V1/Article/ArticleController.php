@@ -34,15 +34,23 @@ class ArticleController extends BaseController
     public function index(){
         //获取文章列表
         $article = $this->article->paginate();
-        return $this->response->paginator($article, new ArticleTransformer());
+        return return_rest('1',compact('article'),'获取文章列表');
+    }
+
+    /**
+     * 获取首页文章
+     *
+     */
+    public function indexArticle()
+    {
+
     }
 
     //获取文章详情
     public function detail($id)
     {
-
         $article = $this->article->withOnly('content',['article_id','content'])->find($id);
-        return $article;
+        return return_rest('1',$article,'获取文章详情');
     }
 
 

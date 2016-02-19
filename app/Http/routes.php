@@ -89,7 +89,8 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
         'as'    => 'carousel.index',
         'uses'  => 'Carousel\CarouselController@index'
     ]);
-
+    //根据用户手机号码获取用户信息
+    $api->get('customer/byMobile','Customer\CustomerController@detailByMobile')->name('customer.detailByMobile');
 
     // 需要jwt验证后才能使用的API
     $api->group(['middleware' => 'jwt.auth'], function ($api) {

@@ -59,6 +59,18 @@ class CustomerController extends BaseController
         $user['company'] = is_null($user['company']) ? "" : $user['company'];
         return return_rest('1',compact('user'),'获取成功');
     }
+    /**
+     * 根据手机号码获取用户信息
+     */
+    public function detailByMobile()
+    {
+        $mobile = $this->request->get('mobile');
+        $user = $this->modelCustomer->where('mobile',$mobile)->first();
+        if($user){
+            return return_rest('1',compact('user'));
+        }
+        return return_rest('0','','该用户不存在');
+    }
 
     /**
      * @api {put} /user 修改个人信息
