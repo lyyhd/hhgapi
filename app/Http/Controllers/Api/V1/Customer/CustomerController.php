@@ -69,7 +69,9 @@ class CustomerController extends BaseController
             ->withOnly('company',array('id','customer_id','name','website','finance_status','position','weixin','email'))
             ->where('mobile',$mobile)
             ->first();
-
+        if(!$user){
+            return return_rest('0','','该用户不存在');
+        }
         $user = $user->toArray();
         if(is_null($user['company'])){
             $user['is_company'] = '0';
