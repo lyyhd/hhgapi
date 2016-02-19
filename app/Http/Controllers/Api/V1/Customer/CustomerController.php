@@ -65,11 +65,19 @@ class CustomerController extends BaseController
     public function detailByMobile()
     {
         $mobile = $this->request->get('mobile');
-        $user = $this->modelCustomer->where('mobile',$mobile)->first();
-        if($user){
-            return return_rest('1',compact('user'));
+        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address')
+            ->withOnly('company',array('id','customer_id','name','website','finance_status','position','weixin','email'))
+            ->where('mobile',$mobile)
+            ->first();
+
+        $user = $user->toArray();
+        if(is_null($user['company'])){
+            $user['is_company'] = '0';
+        }else{
+            $user['is_company'] = '1';
         }
-        return return_rest('0','','该用户不存在');
+        $user['company'] = is_null($user['company']) ? "" : $user['company'];
+        return return_rest('1',compact('user'),'获取成功');
     }
 
     /**
