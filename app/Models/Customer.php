@@ -30,7 +30,7 @@ class Customer extends BaseModel implements AuthenticatableContract
 
     public function company()
     {
-        return $this->hasOne('App\Models\Company\Company');
+        return $this->belongsTo('App\Models\Company\Company');
     }
 
     public function activity()

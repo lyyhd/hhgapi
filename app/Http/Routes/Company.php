@@ -26,3 +26,8 @@ $api->get('company/field/{id}/detail',[
     'as'    => 'company.field',
     'uses'  => 'CompanyFieldController@fieldDetail',
 ]);
+
+//获取项目列表
+$api->get('company/project','CompanyProjectController@index')->name('company.project');
+//获取项目详情
+$api->get('company/project/detail','CompanyProjectController@show')->name('company.project.detail');

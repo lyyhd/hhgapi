@@ -46,8 +46,8 @@ class CustomerController extends BaseController
      */
     public function show()
     {
-        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address')
-            ->withOnly('company',array('id','customer_id','name','website','finance_status','position','weixin','email'))
+        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
+            ->withOnly('company',array('id','name','website','finance_status','weixin','email'))
             ->find($this->user()->id);
 
 //        return $this->response->item($user, new CustomerTransformer);

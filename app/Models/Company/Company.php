@@ -34,7 +34,7 @@ class Company extends BaseModel
 
     public function customer()
     {
-        return $this->belongsTo('App\Models\Customer');
+        return $this->hasMany('App\Models\Customer');
     }
 
     public function finance()
