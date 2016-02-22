@@ -113,6 +113,8 @@ class AuthController extends BaseController
         if($customer->save()){
             // 用户注册事件
             $token = \JWTAuth::fromUser($customer);
+            //为用户生成头像
+
             return return_rest('1',array('token'=>$token));
         }
 
