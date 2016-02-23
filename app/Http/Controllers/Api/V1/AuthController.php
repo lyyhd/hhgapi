@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Customer;
 use Goodspb\LaravelEasemob\Facades\Easemob;
+use Intervention\Image\Facades\Image;
 use Mockery\CountValidator\Exception;
 
 
@@ -114,7 +115,8 @@ class AuthController extends BaseController
             // 用户注册事件
             $token = \JWTAuth::fromUser($customer);
             //为用户生成头像
-
+            $img = Image::make('uploads/avatars/avatar.png');
+            $img->save('uploads/avatars/'.$mobile.'.jpg');
             return return_rest('1',array('token'=>$token));
         }
 
