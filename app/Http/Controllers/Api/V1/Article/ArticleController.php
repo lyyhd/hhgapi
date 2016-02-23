@@ -50,8 +50,14 @@ class ArticleController extends BaseController
     public function detail($id)
     {
         $article = $this->article->withOnly('content',['article_id','content'])->find($id);
-        return return_rest('1',$article,'获取文章详情');
+        return return_rest('1',compact('article'),'获取文章详情');
     }
-
+    //增加文章阅读量
+    public function addView()
+    {
+        $id = $this->request->get('id');
+        //对文章进行+1的阅读量
+        $this->article->find($id)->increment('view');
+    }
 
 }

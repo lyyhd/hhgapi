@@ -10,3 +10,5 @@
 $api->get('article',['as' => 'article.index','uses' => 'ArticleController@index']);
 //获取文章详情
 $api->get('article/{id}/detail',['as' => 'article.detail','uses' => 'ArticleController@detail']);
+//阅读量增加
+$api->get('article/view','ArticleController@addView')->name('article.addView');
