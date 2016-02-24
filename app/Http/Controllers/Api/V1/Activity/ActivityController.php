@@ -42,8 +42,14 @@ class ActivityController extends BaseController
         if($this->request->has('per_page')){
             $per_page = $this->request->get('per_page');
         }
+        if($take = $this->request->get('take')){
+            //获取活动列表
+            $activity = $this->activity->select('id','image','brief','title','created_at')->take($take)->orderBy('created_at','desc')->get()->toArray();
+
+            return return_rest('1',compact('activity'),'获取列表成功');
+        }
         //获取活动列表
-        $activity = $this->activity->select('id','image','brief','title')->paginate($per_page)->toArray();
+        $activity = $this->activity->select('id','image','brief','title','created_at')->orderBy('created_at','desc')->paginate($per_page)->toArray();
 
         return return_rest('1',compact('activity'),'获取列表成功');
     }

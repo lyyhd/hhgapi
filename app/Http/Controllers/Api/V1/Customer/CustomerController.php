@@ -237,16 +237,20 @@ class CustomerController extends BaseController
                 $validator->errors()->add('old_password', '密码错误');
             });
         }
-
         if ($validator->fails()) {
-            return $this->errorBadRequest($validator->messages());
+            if(count($validator->messages()->get('password')) > 0) return return_rest('0','',$validator->messages()->get('password')[0]);
+            if(count($validator->messages()->get('password_confirmation')) > 0) return return_rest('0','',$validator->messages()->get('password_confirmation')[0]);
+            if(count($validator->messages()->get('old_password')) > 0) return return_rest('0','',$validator->messages()->get('old_password')[0]);
         }
-
+        //变更环信密码
+        $easemob_reset_password = Easemob::reset_password($customer->mobile,$this->request->get('password'));
+        if(!$easemob_reset_password) return return_rest('0','','环信密码修改失败');
         $customer->password = bcrypt($this->request->get('password'));
 
-        $customer->save();
+        if($customer->save()){
+            return return_rest('1','','密码修改成功');
+        }
 
-        return $this->response->noContent();
     }
 
     //上传头像

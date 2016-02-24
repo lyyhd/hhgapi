@@ -51,4 +51,14 @@ class CompanyProjectController extends BaseController
 
         return return_rest('1',compact('project','customer'),'项目详情');
     }
+    /**
+     * 我的项目
+     */
+    public function mine()
+    {
+        $user = $this->user();
+        //获取项目信息
+        $project = $this->project->where('company_id',$user->company_id)->first()->toArray();
+        return return_rest('1',compact('project'),'项目详情');
+    }
 }
