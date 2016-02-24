@@ -28,7 +28,8 @@ class CompanyFieldController extends BaseController
      */
     public function index()
     {
-        return $this->model_field->where('parent','0')->get();
+        $field = $this->model_field->select('id','name')->where('parent','0')->get();
+        return return_rest('1',compact('field'),'行业列表');
     }
     /**
      * 获取领域详情

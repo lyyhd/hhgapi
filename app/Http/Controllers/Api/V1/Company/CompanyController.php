@@ -13,6 +13,7 @@ namespace App\Http\Controllers\Api\V1\Company;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Company\Company;
 use App\Models\Company\CompanyAddress;
+use App\Models\Company\CompanyField;
 use App\Transformer\CompanyTransformer;
 use Illuminate\Http\Request;
 
@@ -73,5 +74,22 @@ class CompanyController extends BaseController
             return return_rest('1','','更新成功');
         }
         return return_rest('0','','更新失败');
+    }
+    /**
+     * 获取公司列表
+     *
+     */
+    public function all()
+    {
+        $query = Company::select('id','name','brief','logo','field_id')->withOnly('customer',['id','company_id','name','position','avatar'])->withOnly('field',['id','name']);
+        //判断搜索条件
+        if($this->request->has('field') && $this->request->get('field') > 0)
+        {
+            $field = $this->request->get('field');
+            $query->searchField($field);
+        }
+        //
+        $company = $query->paginate(15)->toArray();
+        return return_rest('1',compact('company'),'公司列表');
     }
 }

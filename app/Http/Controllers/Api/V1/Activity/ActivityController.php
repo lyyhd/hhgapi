@@ -16,6 +16,7 @@ use App\Models\Activity\ActivityCustomerAttention;
 use App\Models\Activity\ActivityCustomerCollect;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ActivityController extends BaseController

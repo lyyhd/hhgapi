@@ -37,6 +37,7 @@ class Company extends BaseModel
         return $this->hasMany('App\Models\Customer');
     }
 
+
     public function finance()
     {
         return $this->belongsTo('App\Models\Company\CompanyFinance','finance_status','status');

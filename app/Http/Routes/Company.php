@@ -31,6 +31,8 @@ $api->get('company/field/{id}/detail',[
 $api->get('company/project','CompanyProjectController@index')->name('company.project');
 //获取项目详情
 $api->get('company/project/detail','CompanyProjectController@show')->name('company.project.detail');
+//获取公司列表
+$api->get('company/all','CompanyController@all')->name('company.all');
 
 // 需要jwt验证后才能使用的API
 $api->group(['middleware' => 'jwt.auth'], function ($api) {
