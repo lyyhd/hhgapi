@@ -49,11 +49,10 @@ class CompanyProjectController extends BaseController
         //获取项目id
         $id = $this->request->get('id');
 
-        $project = $this->project->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency')->with('field')->find($id);
+        $project = $this->project->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency')->with('field')->find($id)->toArray();
         if(!$project){
             return return_rest('0','','该项目不存在');
         }
-        dd($project['target_amount']);
         //获取项目创世人 联合创始人
         $project['customer'] = Customer::where('company_id',$project['company_id'])->select('id','name','position','avatar','mobile')->get()->toArray();
         //获取项目优势
