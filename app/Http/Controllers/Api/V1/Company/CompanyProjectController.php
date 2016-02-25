@@ -53,6 +53,7 @@ class CompanyProjectController extends BaseController
         if(!$project){
             return return_rest('0','','该项目不存在');
         }
+        dd($project['target_amount']);
         //获取项目创世人 联合创始人
         $project['customer'] = Customer::where('company_id',$project['company_id'])->select('id','name','position','avatar','mobile')->get()->toArray();
         //获取项目优势
