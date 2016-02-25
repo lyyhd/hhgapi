@@ -15,6 +15,10 @@ class CompanyProject extends BaseModel
 {
     protected $table = 'company_project';
 
+    protected $casts = [
+      'get_out' => 'int'
+    ];
+
     //获取项目领域
     public function field()
     {
