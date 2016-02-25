@@ -64,6 +64,7 @@ return [
             'strict'    => false,
             'options'   => array(
                 PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_STRINGIFY_FETCHES => false,
             ),
         ],
 
