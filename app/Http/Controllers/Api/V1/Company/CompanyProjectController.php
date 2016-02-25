@@ -10,9 +10,12 @@ namespace App\Http\Controllers\Api\V1\Company;
 
 
 use App\Http\Controllers\Api\BaseController;
+use App\Models\Company\Company;
 use App\Models\Company\CompanyIntroduce;
 use App\Models\Company\CompanyProject;
 use App\Models\Company\CompanyProjectDynamic;
+use App\Models\Company\CompanyProjectField;
+use App\Models\Company\CompanyProjectFieldConfig;
 use App\Models\Customer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -46,7 +49,7 @@ class CompanyProjectController extends BaseController
         //获取项目id
         $id = $this->request->get('id');
 
-        $project = $this->project->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe')->with('field')->find($id);
+        $project = $this->project->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency')->with('field')->find($id);
         if(!$project){
             return return_rest('0','','该项目不存在');
         }
@@ -72,7 +75,22 @@ class CompanyProjectController extends BaseController
     {
         $user = $this->user();
         //获取项目信息
-        $project = $this->project->where('company_id',$user->company_id)->first()->toArray();
+        $project = $this->project
+            ->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency','city')->where('company_id',$user->company_id)
+            ->with('field')
+            ->first()->toArray();
+        //项目介绍
+        $project['project_introduce'] = DB::table('company_project_detail')->where('company_project_id',$project['id'])->first()->project_introduce;
+        //获取企业网站
+        $project['website'] = Company::where('id',$project['company_id'])->first()->website;
         return return_rest('1',compact('project'),'项目详情');
+    }
+    /**
+     * 获取项目领域列表
+     */
+    public function field()
+    {
+        $field = CompanyProjectFieldConfig::select('id','name')->withOnly('subField',array('id','name','parent_id'))->where('parent_id',0)->get()->toArray();
+        return return_rest('1',compact('field'),'项目领域列表');
     }
 }

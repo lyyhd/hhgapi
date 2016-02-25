@@ -15,4 +15,9 @@ class CompanyProjectFieldConfig extends BaseModel
 {
     protected $table = 'company_project_field_config';
 
+    //获取subField
+    public function subField()
+    {
+        return $this->hasMany('App\Models\Company\CompanyProjectFieldConfig','parent_id');
+    }
 }
