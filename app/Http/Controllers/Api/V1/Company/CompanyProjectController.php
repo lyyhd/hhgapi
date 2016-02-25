@@ -69,7 +69,6 @@ class CompanyProjectController extends BaseController
         $project['dynamic'] = CompanyProjectDynamic::select('company_project_dynamic.id','company_project_dynamic.content','company_project_dynamic.year','company_project_dynamic.date','company_project_dynamic_config.name')->where('company_id',$project['compayy_id'])
             ->leftJoin('company_project_dynamic_config','company_project_dynamic.config_id','=','company_project_dynamic_config.id')
             ->orderBy('year','desc')->get()->toArray();
-        dd($project);
         return return_rest('1',compact('project'),'项目详情');
     }
     /**
