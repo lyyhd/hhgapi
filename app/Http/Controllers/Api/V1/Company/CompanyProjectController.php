@@ -56,8 +56,11 @@ class CompanyProjectController extends BaseController
         //获取项目创世人 联合创始人
         $project['customer'] = Customer::where('company_id',$project['company_id'])->select('id','name','position','avatar','mobile')->get()->toArray();
         //获取项目优势
+        $project['teamAdvantage'] = "";
         $company_extend = DB::table('company_extend')->select('story')->where('company_id',$project['company_id'])->first();
-        $project['teamAdvantage'] = $company_extend->story;
+        if($company_extend){
+            $project['teamAdvantage'] = $company_extend->story;
+        }
         //获取公司介绍
         $project['companyIntroduce'] = CompanyIntroduce::select('company_introduce.id','company_introduce.content','company_introduce_config.name')->where('company_id',$project['company_id'])
             ->leftJoin('company_introduce_config','company_introduce.config_id','=','company_introduce_config.id')
@@ -66,6 +69,7 @@ class CompanyProjectController extends BaseController
         $project['dynamic'] = CompanyProjectDynamic::select('company_project_dynamic.id','company_project_dynamic.content','company_project_dynamic.year','company_project_dynamic.date','company_project_dynamic_config.name')->where('company_id',$project['compayy_id'])
             ->leftJoin('company_project_dynamic_config','company_project_dynamic.config_id','=','company_project_dynamic_config.id')
             ->orderBy('year','desc')->get()->toArray();
+//        dd($project);
         return return_rest('1',compact('project'),'项目详情');
     }
     /**
