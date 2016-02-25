@@ -63,7 +63,7 @@ return [
             'prefix'    => '',
             'strict'    => false,
             'options'   => array(
-                PDO::ATTR_PERSISTENT => true,
+                PDO::ATTR_EMULATE_PREPARES => false,
             ),
         ],
 
