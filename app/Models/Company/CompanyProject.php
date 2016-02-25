@@ -25,4 +25,9 @@ class CompanyProject extends BaseModel
     {
         return $this->hasOne('App\Models\Company\CompanyProjectDetail');
     }
+    //公司介绍
+    public function companyIntroduce()
+    {
+        //return
+    }
 }
