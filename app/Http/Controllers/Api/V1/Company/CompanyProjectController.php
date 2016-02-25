@@ -54,7 +54,7 @@ class CompanyProjectController extends BaseController
             return return_rest('0','','该项目不存在');
         }
         //获取项目创世人 联合创始人
-        $project['customer'] = Customer::where('company_id',$project['company_id'])->select('id','name','position','avatar')->get()->toArray();
+        $project['customer'] = Customer::where('company_id',$project['company_id'])->select('id','name','position','avatar','mobile')->get()->toArray();
         //获取项目优势
         $company_extend = DB::table('company_extend')->select('story')->where('company_id',$project['company_id'])->first();
         $project['teamAdvantage'] = $company_extend->story;
@@ -92,5 +92,15 @@ class CompanyProjectController extends BaseController
     {
         $field = CompanyProjectFieldConfig::select('id','name')->withOnly('subField',array('id','name','parent_id'))->where('parent_id',0)->get()->toArray();
         return return_rest('1',compact('field'),'项目领域列表');
+    }
+
+    /**
+     * 更新项目信息
+     */
+    public function update()
+    {
+
+        $project = new CompanyProject();
+
     }
 }
