@@ -111,7 +111,7 @@ class AuthController extends BaseController
         $mobile     = $this->request->get('mobile');
         $password   = $this->request->get('password');
         //TODO用户类型 设置默认为3游客 1为创业者2为投资人
-        $type       = $this->request->has('type') ? $this->request->has('type') : 3;
+        $type       = $this->request->has('type') ? $this->request->get('type') : 3;
         //TODO 其他信息
         $customer = new Customer;
         $customer->mobile   = $mobile;
