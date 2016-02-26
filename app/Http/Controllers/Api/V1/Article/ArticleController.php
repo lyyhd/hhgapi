@@ -38,7 +38,7 @@ class ArticleController extends BaseController
             $article = $this->article->where('type_id',$type)->paginate();
             return return_rest('1',compact('article'),'获取文章详情');
         }
-        $article = $this->article->paginate();
+        $article = $this->article->orderBy('created_at','desc')->paginate();
         return return_rest('1',compact('article'),'获取文章列表');
     }
 

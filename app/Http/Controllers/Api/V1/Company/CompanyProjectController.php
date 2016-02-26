@@ -65,10 +65,17 @@ class CompanyProjectController extends BaseController
         $project['companyIntroduce'] = CompanyIntroduce::select('company_introduce.id','company_introduce.content','company_introduce_config.name')->where('company_id',$project['company_id'])
             ->leftJoin('company_introduce_config','company_introduce.config_id','=','company_introduce_config.id')
             ->orderBy('company_introduce.config_id','asc')->get()->toArray();
-        //获取公司动态详情
-        $project['dynamic'] = CompanyProjectDynamic::select('company_project_dynamic.id','company_project_dynamic.content','company_project_dynamic.year','company_project_dynamic.date','company_project_dynamic_config.name')->where('company_id',$project['company_id'])
-            ->leftJoin('company_project_dynamic_config','company_project_dynamic.config_id','=','company_project_dynamic_config.id')
-            ->orderBy('year','desc')->get()->toArray();
+        //获取动态详情
+        //获取动态年份
+        $years = CompanyProjectDynamic::select('year')->where('project_id',$project['id'])->groupBy('year')->orderBy('year','desc')->get()->toArray();
+        foreach($years as $year)
+        {
+            $project['dynamic'][$year['year']] = CompanyProjectDynamic::select('company_project_dynamic.id','company_project_dynamic.content','company_project_dynamic.date','company_project_dynamic_config.name')
+                ->where('project_id',$project['id'])
+                ->where('year',$year)
+                ->leftJoin('company_project_dynamic_config','company_project_dynamic.config_id','=','company_project_dynamic_config.id')
+                ->orderBy('date','desc')->get();
+        }
         return return_rest('1',compact('project'),'项目详情');
     }
     /**

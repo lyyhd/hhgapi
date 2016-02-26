@@ -79,6 +79,7 @@ class AuthController extends BaseController
             'password'     => 'required',
             'verifyCode'    => "required|verify_code:$token|confirm_mobile_rule:mobile_required,$token"
         ], [
+            'verifyCode.required' => '请输入短信验证码',
             'verify_code'   => '验证码错误',
             'confirm_mobile_not_change' => '当前手机号码与发送号码不符',
             'confirm_mobile_rule' => '验证码验证错误'
@@ -93,9 +94,14 @@ class AuthController extends BaseController
         if($messages->has('verifyCode')){
             $verifyCodes = $messages->get('verifyCode');
             foreach($verifyCodes as $verifyCode){
+                if($verifyCode == '请输入短信验证码') return return_rest('0','','请输入短信验证码');
                 if($verifyCode == '验证码错误') return return_rest('0','','验证码错误');
                 if($verifyCode == '验证码验证错误') return return_rest('0','','验证码验证错误');
             }
+        }
+        if($messages->has('password'))
+        {
+            return return_rest('0','','请输入密码');
         }
         //增加环信注册 失败返回false
         $easemob = Easemob::user_register($this->request->get('mobile'),$this->request->get('password'));
@@ -111,6 +117,7 @@ class AuthController extends BaseController
         $customer->mobile   = $mobile;
         $customer->password = bcrypt($password);
         $customer->type     = $type;
+        $customer->avatar     = 'uploads/avatars/'.$mobile.'.jpg';
         if($customer->save()){
             // 用户注册事件
             $token = \JWTAuth::fromUser($customer);
