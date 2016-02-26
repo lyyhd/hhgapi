@@ -62,7 +62,7 @@ class ActivityController extends BaseController
     {
         $id = $this->request->get('id');
         try{
-            $activity = $this->activity->select('id','title','image','content','created_at')->findOrFail($id)->toArray();
+            $activity = $this->activity->select('id','title','image','content','begin_at','end_at','address')->findOrFail($id)->toArray();
         }catch (\Exception $e){
             if($e->getMessage() === 'No query results for model [App\Models\Activity\Activity].') return return_rest('0','','该活动不存在');
             return return_rest('0','',$e->getMessage());
@@ -97,6 +97,7 @@ class ActivityController extends BaseController
     public function attentionList()
     {
         $attentionList = Customer::select('id')->where('id',$this->user()->id)->with('activity')->get()->toArray();
+        $attentionList = $attentionList[0]['activity'];
         if($attentionList){
             return return_rest('1',compact('attentionList'),'获取列表成功');
         }

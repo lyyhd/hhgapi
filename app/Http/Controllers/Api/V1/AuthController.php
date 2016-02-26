@@ -45,7 +45,7 @@ class AuthController extends BaseController
             return return_rest('0','','请按照规则输入手机号码');
         }
         //登录成功 获取用户信息
-        $customer = Customer::select('type','name','nickname')->where('mobile',$this->request->get('mobile'))->first();
+        $customer = Customer::select('type','name','nickname','avatar')->where('mobile',$this->request->get('mobile'))->first();
         return return_rest('1',compact('token','customer'),'登陆成功');
     }
 
@@ -124,7 +124,7 @@ class AuthController extends BaseController
             //为用户生成头像
             $img = Image::make('uploads/avatars/avatar.png');
             $img->save('uploads/avatars/'.$mobile.'.jpg');
-            return return_rest('1',array('token'=>$token));
+            return return_rest('1',compact('token','customer'));
         }
 
         $this->errorBadRequest(return_rest('0','','操作失败'));
