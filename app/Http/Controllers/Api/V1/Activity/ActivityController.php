@@ -108,7 +108,7 @@ class ActivityController extends BaseController
             $aid[] = $activity->activity_id;
         }
         //获取活动
-        $attentionList = $this->activity->whereIn('id',$aid)->paginate($per_page)->toArray();
+        $attentionList = $this->activity->select('id','image','brief','title','created_at')->whereIn('id',$aid)->paginate($per_page)->toArray();
 
         if($attentionList){
             return return_rest('1',compact('attentionList'),'获取列表成功');
