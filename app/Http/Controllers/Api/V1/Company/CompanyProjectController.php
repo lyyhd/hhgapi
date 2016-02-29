@@ -67,7 +67,16 @@ class CompanyProjectController extends BaseController
             ->orderBy('company_introduce.config_id','asc')->get()->toArray();
         //获取动态详情
         //获取动态年份
-        $project['dynamic'] = CompanyProjectDynamic::select('company_project_dynamic.id','company_project_dynamic.content','company_project_dynamic.year','company_project_dynamic.date','company_project_dynamic_config.name')
+        $years = CompanyProjectDynamic::select('year')->where('project_id',$project['id'])->groupBy('year')->orderBy('year','desc')->get()->toArray();
+        foreach($years as $year)
+        {
+            $project['dynamic_ios'][$year['year']] = CompanyProjectDynamic::select('company_project_dynamic.id','company_project_dynamic.content','company_project_dynamic.date','company_project_dynamic_config.name')
+                ->where('project_id',$project['id'])
+                ->where('year',$year)
+                ->leftJoin('company_project_dynamic_config','company_project_dynamic.config_id','=','company_project_dynamic_config.id')
+                ->orderBy('date','desc')->get()->toArray();
+        }
+        $project['dynamic_android'] = CompanyProjectDynamic::select('company_project_dynamic.id','company_project_dynamic.content','company_project_dynamic.year','company_project_dynamic.date','company_project_dynamic_config.name')
             ->where('project_id',$project['id'])
             ->leftJoin('company_project_dynamic_config','company_project_dynamic.config_id','=','company_project_dynamic_config.id')
             ->orderBy('year','desc')
