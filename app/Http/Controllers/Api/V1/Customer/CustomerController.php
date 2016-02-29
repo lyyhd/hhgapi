@@ -301,9 +301,9 @@ class CustomerController extends BaseController
      */
     public function employmentExperience()
     {
-        $empolyment = DB::table('employment_experience')->where('customer_id',$this->user()->id)->get();
+        $employment = Customer\EmployExperience::where('customer_id',$this->user()->id)->withOnly('company',array('id','logo','name','brief'))->get();
 
-        return return_rest('1',compact('empolyment'),'工作经历列表');
+        return return_rest('1',compact('employment'),'工作经历列表');
     }
     /**
      *获取创业经历
@@ -314,4 +314,5 @@ class CustomerController extends BaseController
 
         return return_rest('1',compact('experience'),'我的创业经历');
     }
+
 }
