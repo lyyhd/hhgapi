@@ -89,6 +89,10 @@ class CompanyProjectController extends BaseController
     public function mine()
     {
         $user = $this->user();
+        if($user->company_id == 0){
+            $project['is_company'] = '0';
+            return return_rest('1',compact('project'),'项目详情');
+        }
         //获取项目信息
         $project = $this->project
             ->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency','city')->where('company_id',$user->company_id)
@@ -98,6 +102,7 @@ class CompanyProjectController extends BaseController
         $project['project_introduce'] = DB::table('company_project_detail')->where('company_project_id',$project['id'])->first()->project_introduce;
         //获取企业网站
         $project['website'] = Company::where('id',$project['company_id'])->first()->website;
+        $project['is_company'] = '1';
         return return_rest('1',compact('project'),'项目详情');
     }
     /**

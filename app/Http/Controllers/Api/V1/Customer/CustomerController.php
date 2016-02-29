@@ -10,10 +10,12 @@ namespace App\Http\Controllers\Api\V1\Customer;
 use \App\Http\Controllers\Api\BaseController;
 use App\Jobs\ChangeName;
 use App\Models\Company\Company;
+use App\Models\Company\CompanyExperience;
 use App\Models\Customer;
 use App\Transformer\CustomerTransformer;
 use Goodspb\LaravelEasemob\Facades\Easemob;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CustomerController extends BaseController
@@ -293,5 +295,23 @@ class CustomerController extends BaseController
         $list = $this->modelCustomer->select('name','mobile')->whereIn('mobile',$mobiles)->get()->toArray();
 
         return return_rest('1',compact('list'),'获取列表成功');
+    }
+    /**
+     * 获取用户工作经历
+     */
+    public function employmentExperience()
+    {
+        $empolyment = DB::table('employment_experience')->where('customer_id',$this->user()->id)->get();
+
+        return return_rest('1',compact('empolyment'),'工作经历列表');
+    }
+    /**
+     *获取创业经历
+     */
+    public function companyExperience()
+    {
+        $experience = CompanyExperience::where('customer_id',$this->user()->id)->get()->toArray();
+
+        return return_rest('1',compact('experience'),'我的创业经历');
     }
 }

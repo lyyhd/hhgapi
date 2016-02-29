@@ -51,6 +51,10 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     $api->group(['namespace' => 'Invest'],function($api){
         require (__DIR__ . '/Routes/Invest.php');
     });
+    //用户相关
+    $api->group(['namespace' => 'Customer'], function($api){
+        require (__DIR__ . '/Routes/Customer.php');
+    });
     /**
      * 短信验证码
      */
