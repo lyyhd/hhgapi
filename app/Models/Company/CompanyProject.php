@@ -34,4 +34,6 @@ class CompanyProject extends BaseModel
     {
         //return
     }
+    //公司信息
+
 }

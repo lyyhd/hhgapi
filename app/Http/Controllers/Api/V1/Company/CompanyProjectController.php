@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\V1\Company;
 
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Company\Company;
+use App\Models\Company\CompanyFinance;
 use App\Models\Company\CompanyIntroduce;
 use App\Models\Company\CompanyProject;
 use App\Models\Company\CompanyProjectDynamic;
@@ -61,6 +62,7 @@ class CompanyProjectController extends BaseController
         if($company_extend){
             $project['teamAdvantage'] = $company_extend->story;
         }
+        //获取融资轮次
         //获取公司介绍
         $project['companyIntroduce'] = CompanyIntroduce::select('company_introduce.id','company_introduce.content','company_introduce_config.name')->where('company_id',$project['company_id'])
             ->leftJoin('company_introduce_config','company_introduce.config_id','=','company_introduce_config.id')
