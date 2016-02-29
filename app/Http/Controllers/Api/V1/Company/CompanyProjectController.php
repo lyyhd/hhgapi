@@ -38,7 +38,7 @@ class CompanyProjectController extends BaseController
         if($this->request->has('per_page')){
             $per_page = $this->request->get('per_page');
         }
-        $project = $this->project->select('id','name','logo','finance_progress','brief')->with('field')->paginate($per_page)->toArray();
+        $project = $this->project->select('id','name','logo','finance_progress','brief','subscribe_amount')->with('field')->paginate($per_page)->toArray();
 
         return return_rest('1',compact('project'),'项目列表');
     }
