@@ -47,6 +47,10 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     $api->group(['namespace' => 'Company'], function($api){
         require (__DIR__ . '/Routes/Company.php');
     });
+    //投资相关
+    $api->group(['namespace' => 'Invest'],function($api){
+        require (__DIR__ . '/Routes/Invest.php');
+    });
     /**
      * 短信验证码
      */
@@ -122,11 +126,13 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
             'as'    => 'customer.forgetPassword',
             'uses'  => 'Customer\CustomerController@forgetPassword'
         ]);
-        //上传图片 临时
+        //上传头像 临时
         $api->post('customer/avatar',[
             'as'    => 'customer.avatar',
             'uses'  => 'Image\ImageController@avatar'
         ]);
+        //上传
+
         //修改新密码
         $api->post('customer/forget/password',[
             'as'    => 'customer.forgetPassword',

@@ -70,6 +70,7 @@ class ImageController extends BaseController
         }
     }
 
+
     public function uploadImage($file,$path,$fileName,$height = 300,$width = 300)
     {
         \Image::make($file)->resize($width,$height)->save($path.$fileName);

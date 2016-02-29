@@ -46,4 +46,6 @@ $api->get('company/project/field','CompanyProjectController@field')->name('compa
 $api->group(['middleware' => 'jwt.auth'], function ($api) {
     //获取我的项目
     $api->get('company/project/mine','CompanyProjectController@mine')->name('company.project.mine');
+    //创建公司
+    $api->post('company/store','CompanyController@store')->name('company.store');
 });
