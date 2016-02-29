@@ -105,14 +105,14 @@ class ActivityController extends BaseController
         $activities = DB::table('activity_customer_attention')->select('activity_id')->where('customer_id',$this->user()->id)->get();
         $aid = array();
         foreach($activities as $activity){
-
+            $aid[] = $activity->activity_id;
         }
-        //$attentionList = new LengthAwarePaginator($attentionList[0]['activity'],count($attentionList[0]['activity']),$per_page);
-        //$attentionList['data'] = $attentionList['data'][0]['activity'];
-////        if($attentionList){
-////            return return_rest('1',compact('attentionList'),'获取列表成功');
-////        }
-//        return return_rest('1',compact('attentionList'),'用户暂未关注活动');
+        //获取活动
+        $attentionList = $this->activity->whereIn('id',$aid)->paginate($per_page)->toArray();
+        if($attentionList){
+            return return_rest('1',compact('attentionList'),'获取列表成功');
+        }
+        return return_rest('1',compact('attentionList'),'用户暂未关注活动');
     }
     /**
      * 用户进行取消关注 关注操作
