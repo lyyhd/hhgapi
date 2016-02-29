@@ -136,4 +136,13 @@ class CompanyController extends BaseController
         $experience->save();
         return return_rest('1','','公司添加成功');
     }
+    /**
+     *获取创业经历
+     */
+    public function experience()
+    {
+        $experience = CompanyExperience::where('customer_id',$this->user()->id)->get()->toArray();
+
+        return return_rest('1',compact('experience'),'我的创业经历');
+    }
 }

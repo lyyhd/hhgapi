@@ -48,4 +48,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->get('company/project/mine','CompanyProjectController@mine')->name('company.project.mine');
     //创建公司
     $api->post('company/store','CompanyController@store')->name('company.store');
+    //获取我的创业经历
+    $api->get('company/experience','CompanyController@experience')->name('company.experience');
 });

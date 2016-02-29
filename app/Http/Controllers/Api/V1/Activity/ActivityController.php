@@ -16,6 +16,7 @@ use App\Models\Activity\ActivityCustomerAttention;
 use App\Models\Activity\ActivityCustomerCollect;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -96,12 +97,22 @@ class ActivityController extends BaseController
      */
     public function attentionList()
     {
-        $attentionList = Customer::select('id')->where('id',$this->user()->id)->with('activity')->get()->toArray();
-        $attentionList = $attentionList[0]['activity'];
-        if($attentionList){
-            return return_rest('1',compact('attentionList'),'获取列表成功');
+        $per_page = 15;
+        if($this->request->has('per_page')){
+            $per_page = $this->request->get('per_page');
         }
-        return return_rest('1',compact('attentionList'),'用户暂未关注活动');
+        //获取活动id
+        $activities = DB::table('activity_customer_attention')->select('activity_id')->where('customer_id',$this->user()->id)->get();
+        $aid = array();
+        foreach($activities as $activity){
+
+        }
+        //$attentionList = new LengthAwarePaginator($attentionList[0]['activity'],count($attentionList[0]['activity']),$per_page);
+        //$attentionList['data'] = $attentionList['data'][0]['activity'];
+////        if($attentionList){
+////            return return_rest('1',compact('attentionList'),'获取列表成功');
+////        }
+//        return return_rest('1',compact('attentionList'),'用户暂未关注活动');
     }
     /**
      * 用户进行取消关注 关注操作

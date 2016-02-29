@@ -18,14 +18,14 @@ class Activity extends BaseModel
 
     public function customer_attention()
     {
-        return $this->belongsToMany('App\Models\customer','activity_customer_attention');
+        return $this->belongsToMany('App\Models\Customer','activity_customer_attention');
     }
     public function customer_collect()
     {
-        return $this->belongsToMany('App\Models\customer','activity_customer_collect');
+        return $this->belongsToMany('App\Models\Customer','activity_customer_collect');
     }
     public function customer()
     {
-        return $this->belongsTo('App\Models\customer');
+        return $this->belongsTo('App\Models\Customer');
     }
 }
