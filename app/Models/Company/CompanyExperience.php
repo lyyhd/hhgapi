@@ -14,4 +14,9 @@ use App\Models\BaseModel;
 class CompanyExperience extends BaseModel
 {
     protected $table = 'company_experience';
+
+    public function company()
+    {
+        return $this->hasOne('App\Models\Company\Company','id','company_id');
+    }
 }

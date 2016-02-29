@@ -310,7 +310,7 @@ class CustomerController extends BaseController
      */
     public function companyExperience()
     {
-        $experience = CompanyExperience::where('customer_id',$this->user()->id)->get()->toArray();
+        $experience = CompanyExperience::where('customer_id',$this->user()->id)->withOnly('company',array('id','logo','name','brief'))->get()->toArray();
 
         return return_rest('1',compact('experience'),'我的创业经历');
     }
