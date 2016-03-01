@@ -101,7 +101,7 @@ class ActivityController extends BaseController
             $per_page = $this->request->get('per_page');
         }
         //获取活动id
-        $activities = DB::table('activity_customer_attention')->select('activity_id')->where('customer_id',$this->user()->id)->get();
+        $activities = DB::table('activity_customer_attention')->select('activity_id')->where('customer_id',$this->user()->id)->orderBy('created_at','desc')->get();
         $aid = array();
         foreach($activities as $activity){
             $aid[] = $activity->activity_id;
