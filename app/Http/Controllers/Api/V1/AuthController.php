@@ -122,7 +122,7 @@ class AuthController extends BaseController
             // 用户注册事件
             $token = \JWTAuth::fromUser($customer);
             //为用户生成头像
-            $img = Image::make('uploads/avatars/avatar.png');
+            $img = Image::make('uploads/avatars/avatar.jpg');
             $img->save('uploads/avatars/'.$mobile.'.jpg');
             return return_rest('1',compact('token','customer'));
         }
