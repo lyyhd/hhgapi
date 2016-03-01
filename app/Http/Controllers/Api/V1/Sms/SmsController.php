@@ -23,6 +23,8 @@ class SmsController extends BaseController
         parent::__construct($request);
         //设置短信通信发送为云通讯
         $this->smsTemplate = 'YunTongXun';
+        //关闭队列
+        PhpSms::queue(false);
     }
 
     /**
@@ -51,7 +53,7 @@ class SmsController extends BaseController
         //发送验证码短信
         $verfiy_code        = (string)$this->generate_code(4);
         //设置短信模板id
-        $tem_id             = '22890';
+        $tem_id             = '22891';
         //设置短信过期时间
         $deadline_time      = 60;
         //TODO模板参数
@@ -129,8 +131,8 @@ class SmsController extends BaseController
     private function sendTokenMessage($mobile,$smsToken = null,$temId,$deadline_time = 60,$data = array())
     {
         $code = $data[0];
-        //$result = PhpSms::make()->to($mobile)->template($this->smsTemplate, $temId)->data($data)->send();
-        $result = 'true';
+        $result = PhpSms::make()->to($mobile)->template($this->smsTemplate, $temId)->data($data)->send();
+        //$result = 'true';
         //设置过期时间
         $deadline_time += time();
         \SmsManager::storeSentInfo($smsToken,compact('mobile','code','deadline_time'));
