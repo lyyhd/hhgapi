@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Activity extends BaseModel
 {
     use SoftDeletes;
+    protected $dates = ['created_at','begin_at','end_at'];
 
     public function customer_attention()
     {

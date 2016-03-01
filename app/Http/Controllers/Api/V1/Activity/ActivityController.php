@@ -68,7 +68,7 @@ class ActivityController extends BaseController
             if($e->getMessage() === 'No query results for model [App\Models\Activity\Activity].') return return_rest('0','','该活动不存在');
             return return_rest('0','',$e->getMessage());
         }
-
+        $activity['content'] = htmlspecialchars($activity['content']);
         return return_rest('1',compact('activity'),'获取详情成功');
     }
 
@@ -108,8 +108,8 @@ class ActivityController extends BaseController
             $aid[] = $activity->activity_id;
         }
         //获取活动
-        $attentionList = $this->activity->select('id','image','brief','title','created_at')->whereIn('id',$aid)->paginate($per_page)->toArray();
-
+        $attentionList = $this->activity->select('id','image','brief','title','created_at','begin_at')->whereIn('id',$aid)->paginate($per_page);
+        $attentionList = $attentionList->toArray();
         if($attentionList){
             return return_rest('1',compact('attentionList'),'获取列表成功');
         }
