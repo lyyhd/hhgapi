@@ -68,7 +68,6 @@ class ActivityController extends BaseController
             if($e->getMessage() === 'No query results for model [App\Models\Activity\Activity].') return return_rest('0','','该活动不存在');
             return return_rest('0','',$e->getMessage());
         }
-        $activity['content'] = strip_tags($activity['content']);
         return return_rest('1',compact('activity'),'获取详情成功');
     }
 
