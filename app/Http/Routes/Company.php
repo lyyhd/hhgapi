@@ -13,6 +13,8 @@ $api->get('company',[
     'as'    => 'company.index',
     'uses'  => 'CompanyController@index'
 ]);
+//获取公司详情
+$api->get('company/detail','CompanyController@show')->name('company.show');
 //更新公司信息
 $api->put('company',[
     'as'    => 'company.update',

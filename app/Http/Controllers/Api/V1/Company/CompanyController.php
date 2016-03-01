@@ -16,6 +16,7 @@ use App\Models\Company\CompanyAddress;
 use App\Models\Company\CompanyExperience;
 use App\Models\Company\CompanyExtend;
 use App\Models\Company\CompanyField;
+use App\Models\Company\CompanyIntroduce;
 use App\Models\Customer;
 use App\Transformer\CompanyTransformer;
 use Illuminate\Http\Request;
@@ -46,6 +47,27 @@ class CompanyController extends BaseController
             ->withOnly('field',['name'])
             ->paginate();
         return $this->response->paginator($company,new CompanyTransformer());
+    }
+
+    /**
+     * 获取公司详情
+     *
+     */
+    public function show()
+    {
+        $id = $this->request->get('id');
+        $company = $this->company->find($id);
+        //判断公司是否存在
+        if(!$company){
+            return return_rest('0','','该公司不存在');
+        }
+        $company = $company->toArray();
+        //获取项目介绍
+        $company['introduce'] = CompanyIntroduce::select('company_introduce.id','company_introduce.content','company_introduce_config.name')->where('company_id',$company['id'])
+            ->leftJoin('company_introduce_config','company_introduce.config_id','=','company_introduce_config.id')
+            ->orderBy('company_introduce.config_id','asc')->get()->toArray();
+        return return_rest('1',compact('company'),'获取公司详情');
+
     }
 
     //获取我的项目

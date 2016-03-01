@@ -62,4 +62,9 @@ class Company extends BaseModel
     {
         return $customer ? $query->where('customer_id',$customer) : null;
     }
+    //获取公司介绍
+    public function introduce()
+    {
+        return $this->hasMany('App\Models\Company\CompanyIntroduce');
+    }
 }
