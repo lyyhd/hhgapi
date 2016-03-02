@@ -55,7 +55,7 @@ class SmsController extends BaseController
         //设置短信模板id
         $tem_id             = '22891';
         //设置短信过期时间
-        $deadline_time      = 60;
+        $deadline_time      = 180;
         //TODO模板参数
         $token = $this->ttpassv2($this->request->get('mobile').'verify',time());
         $result = $this->sendTokenMessage($this->request->get('mobile'),$token,$tem_id,$deadline_time,array($verfiy_code));
