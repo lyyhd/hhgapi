@@ -99,7 +99,9 @@ class CompanyProjectController extends BaseController
         $project = $this->project
             ->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency','city')->where('company_id',$user->company_id)
             ->with('field')
-            ->first()->toArray();
+            ->first();
+        if(is_null($project)) return return_rest('0','','该用户没有项目');
+        $project = $project->toArray();
         //项目介绍
         $project['project_introduce'] = DB::table('company_project_detail')->where('company_project_id',$project['id'])->first()->project_introduce;
         //获取企业网站
@@ -121,8 +123,47 @@ class CompanyProjectController extends BaseController
      */
     public function update()
     {
+        $id = $this->request->get('id');
+        $project = $this->project->find($id);
+        if($project){
+            $project->fill($this->request->input());
+            if($project->save()){
+                return return_rest('1','','项目更新成功');
+            }
+            return return_rest('0','','项目更新失败');
+        }
+        return return_rest('0','','项目不存在');
+    }
+    /**
+     * 项目logo替换
+     */
+    //头像上传
+    public function logo()
+    {
+        //验证数据
+        $validator = \Validator::make($this->request->all(),[
+            'logo'    => 'required',
+            'id'      => 'required'
+        ],[
+            'logo.required'   => 'logo没有上传',
+            'id.required'   => '未指定项目id'
+        ]);
 
-        $project = new CompanyProject();
 
+        if($validator->fails()) return return_rest('0','',$validator->messages()->first('logo') ? $validator->messages()->first('logo') : $validator->messages()->first('id'));
+        //TODO 获取手机号码
+        $project = $this->project->find($this->request->get('id'));
+        $fileName = md5(uniqid(str_random(10)));
+        $file = 'uploads/project/logo/'.$fileName.'.jpg';
+        try {
+            \Image::make($this->request->file('logo'))->resize(100,100)->save($file);
+            //添加进入数据库
+            $project->logo = $file;
+            $project->save();
+            return return_rest('1',compact('file'),'logo上传成功');
+        }catch (\Exception $e){
+            //图片上传失败
+            return return_rest('0','',$e->getMessage());
+        }
     }
 }

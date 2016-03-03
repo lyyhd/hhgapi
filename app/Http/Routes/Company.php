@@ -52,4 +52,8 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->post('company/store','CompanyController@store')->name('company.store');
     //获取我的创业经历
     $api->get('company/experience','CompanyController@experience')->name('company.experience');
+    //更新我的项目接口
+    $api->put('company/project','CompanyProjectController@update')->name('company.project.update');
+    //更新项目logo
+    $api->put('company/project/logo','CompanyProjectController@logo')->name('company.project.logo');
 });
