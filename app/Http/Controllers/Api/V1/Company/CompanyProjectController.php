@@ -166,7 +166,7 @@ class CompanyProjectController extends BaseController
         $fileName = md5(uniqid(str_random(10)));
         $file = 'uploads/project/logo/'.$fileName.'.jpg';
         try {
-            \Image::make($this->request->file('logo'))->resize(100,100)->save($file);
+            \Image::make($this->request->file('logo'))->save($file);
             //添加进入数据库
             $project->logo = $file;
             $project->save();
