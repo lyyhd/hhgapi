@@ -114,7 +114,7 @@ class CompanyProjectController extends BaseController
      */
     public function field()
     {
-        $field = CompanyProjectFieldConfig::select('id','name')->withOnly('subField',array('id','name','parent_id'))->where('parent_id',0)->get()->toArray();
+        $field = CompanyProjectFieldConfig::select('id','name')->where('parent_id',0)->get()->toArray();
         return return_rest('1',compact('field'),'项目领域列表');
     }
 
