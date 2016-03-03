@@ -104,8 +104,18 @@ class CompanyProjectController extends BaseController
         $project = $project->toArray();
         //项目介绍
         $project['project_introduce'] = DB::table('company_project_detail')->where('company_project_id',$project['id'])->first()->project_introduce;
+        //获取公司介绍
+        $project['companyIntroduce'] = CompanyIntroduce::select('company_introduce.id','company_introduce.content','company_introduce_config.name')->where('company_id',$project['company_id'])
+            ->leftJoin('company_introduce_config','company_introduce.config_id','=','company_introduce_config.id')
+            ->orderBy('company_introduce.config_id','asc')->get()->toArray();
         //获取企业网站
         $project['website'] = Company::where('id',$project['company_id'])->first()->website;
+        //获取项目优势
+        $project['teamAdvantage'] = "";
+        $company_extend = DB::table('company_extend')->select('story')->where('company_id',$project['company_id'])->first();
+        if($company_extend){
+            $project['teamAdvantage'] = $company_extend->story;
+        }
         $project['is_company'] = '1';
         return return_rest('1',compact('project'),'项目详情');
     }
