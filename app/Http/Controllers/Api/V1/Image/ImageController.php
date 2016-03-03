@@ -33,7 +33,7 @@ class ImageController extends BaseController
         //
         try {
             \Image::make($this->request->file('image'))
-                ->resize(100,100)
+                ->resize(300,300)
                 ->save('uploads/images/'.$fileName.'.jpg');
             return return_message(true,'uploads/images/'.$fileName.'.jpg');
         }catch (\Exception $e){
@@ -59,7 +59,7 @@ class ImageController extends BaseController
         $fileName = $customer->mobile;
         $file = $this->avatar_path.$fileName.'.jpg';
         try {
-            \Image::make($this->request->file('avatar'))->resize(100,100)->save($file);
+            \Image::make($this->request->file('avatar'))->resize(300,300)->save($file);
             //添加进入数据库
             $customer->avatar = $file;
             $customer->save();

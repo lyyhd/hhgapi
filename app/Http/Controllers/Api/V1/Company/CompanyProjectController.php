@@ -62,6 +62,8 @@ class CompanyProjectController extends BaseController
         if($company_extend){
             $project['teamAdvantage'] = $company_extend->story;
         }
+        //获取企业网站
+        $project['website'] = Company::where('id',$project['company_id'])->first()->website;
         //获取融资轮次
         //获取公司介绍
         $project['companyIntroduce'] = CompanyIntroduce::select('company_introduce.id','company_introduce.content','company_introduce_config.name')->where('company_id',$project['company_id'])
