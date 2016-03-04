@@ -100,7 +100,7 @@ class CompanyProjectController extends BaseController
         //获取项目信息
         $project = $this->project
             ->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency','city')->where('company_id',$user->company_id)
-            ->with('field')
+            ->withOnly('field',array('id','name'))
             ->first();
         if(is_null($project)) return return_rest('0','','该用户没有项目');
         $project = $project->toArray();
