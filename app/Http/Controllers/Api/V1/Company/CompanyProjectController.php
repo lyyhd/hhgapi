@@ -149,7 +149,6 @@ class CompanyProjectController extends BaseController
     /**
      * 项目logo替换
      */
-    //头像上传
     public function logo()
     {
         //验证数据
@@ -177,5 +176,40 @@ class CompanyProjectController extends BaseController
             //图片上传失败
             return return_rest('0','',$e->getMessage());
         }
+
+    }
+    /**
+     * 项目logo替换
+     * v2
+     * post
+     */
+    public function projectLogo()
+    {
+        //验证数据
+        $validator = \Validator::make($this->request->all(),[
+            'logo'    => 'required',
+            'id'      => 'required'
+        ],[
+            'logo.required'   => 'logo没有上传',
+            'id.required'   => '未指定项目id'
+        ]);
+
+
+        if($validator->fails()) return return_rest('0','',$validator->messages()->first('logo') ? $validator->messages()->first('logo') : $validator->messages()->first('id'));
+        //TODO 获取手机号码
+        $project = $this->project->find($this->request->get('id'));
+        $fileName = md5(uniqid(str_random(10)));
+        $file = 'uploads/project/logo/'.$fileName.'.jpg';
+        try {
+            \Image::make($this->request->file('logo'))->save($file);
+            //添加进入数据库
+            $project->logo = $file;
+            $project->save();
+            return return_rest('1',compact('file'),'logo上传成功');
+        }catch (\Exception $e){
+            //图片上传失败
+            return return_rest('0','',$e->getMessage());
+        }
+
     }
 }
