@@ -24,7 +24,7 @@ class CompanyProject extends BaseModel
     //获取项目领域
     public function field()
     {
-        return $this->belongsToMany('App\Models\Company\CompanyProjectFieldConfig','company_project_field','project_id','field_id')->select('name');
+        return $this->belongsToMany('App\Models\Company\CompanyProjectFieldConfig','company_project_field','project_id','field_id');
     }
     //项目详情
     public function detail()
