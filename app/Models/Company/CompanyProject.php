@@ -15,7 +15,7 @@ class CompanyProject extends BaseModel
 {
     protected $table = 'company_project';
 
-    protected $fillable = ['name','brief'];
+    protected $fillable = ['name','brief','city'];
 
     protected $casts = [
       'get_out' => 'int'
