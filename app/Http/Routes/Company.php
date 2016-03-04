@@ -56,5 +56,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->put('company/project','CompanyProjectController@update')->name('company.project.update');
     //更新项目logo
     $api->put('company/project/logo','CompanyProjectController@logo')->name('company.project.logo');
-    $api->post('company/project/logo','CompanyProjectController@projectLogo')->name('company.project.projectLogo');
+    //更新项目介绍
+    $api->put('company/introduce','CompanyController@introduce')->name('company.update.introduce');
 });

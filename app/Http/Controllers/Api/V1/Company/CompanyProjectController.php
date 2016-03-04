@@ -147,6 +147,10 @@ class CompanyProjectController extends BaseController
         return return_rest('0','','项目不存在');
     }
     /**
+     *更新项目介绍
+    */
+//    public function
+    /**
      * 项目logo替换
      */
     public function logo()

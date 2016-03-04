@@ -167,4 +167,24 @@ class CompanyController extends BaseController
 
         return return_rest('1',compact('experience'),'我的创业经历');
     }
+    /**
+     * 更新公司介绍
+     *
+     */
+    public function introduce()
+    {
+        //获取介绍id
+        $id = $this->request->get('id');
+        //获取介绍内容
+        $content = $this->request->get('content');
+
+        $introduce = CompanyIntroduce::find($id);
+        if($introduce){
+            $introduce->content = $content;
+            if($introduce->save()){
+                return return_rest('1','','更新成功');
+            }
+        }
+        return return_rest('0','','介绍不存在');
+    }
 }
