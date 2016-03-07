@@ -60,6 +60,7 @@ class CustomerController extends BaseController
             $user['is_company'] = '1';
         }
         $user['company'] = is_null($user['company']) ? "" : $user['company'];
+        $user['time'] = time();
         return return_rest('1',compact('user'),'获取成功');
     }
     /**
