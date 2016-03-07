@@ -32,7 +32,7 @@ class AuthController extends BaseController
 //                //$validator->errors()->add('error_msg', '用户名或密码错误');
 //                return $this->errorBadRequest(return_rest('0','','用户名或密码错误','10021'));
 //            });
-            return return_rest('0','','用户名或密码错误');
+            return return_rest('0',array('token'=>'','customer'=>''),'用户名或密码错误');
         }
 
         if ($validator->fails()) {
@@ -42,7 +42,7 @@ class AuthController extends BaseController
             foreach($mobiles as $mobile){
                 if($mobile == 'The selected mobile is invalid.') return $this->errorBadRequest(return_rest('0','','手机号码未注册'));
             }
-            return return_rest('0','','请按照规则输入手机号码');
+            return return_rest('0',array('token'=>'','customer'=>''),'请按照规则输入手机号码');
         }
         //登录成功 获取用户信息
         $customer = Customer::select('id','type','name','nickname','avatar')->where('mobile',$this->request->get('mobile'))->first();
