@@ -141,6 +141,7 @@ class CompanyProjectController extends BaseController
         $project = $this->project->find($id);
         if($project){
             $fids = json_decode($this->request->get('field'));
+            CompanyProjectField::where('project_id',$id)->delete();
             //判断field是否存在
             foreach($fids as $fid){
                 $field = CompanyProjectField::where('project_id',$id)->where('field_id',$fid)->first();
