@@ -39,4 +39,8 @@ class CompanyFieldController extends BaseController
         $subField = $this->model_field->select('id','name')->where('parent',$id)->get();
         return return_rest('1',compact('subField'),'行业子集菜单');
     }
+    /**
+     * 更新领域
+     */
+
 }

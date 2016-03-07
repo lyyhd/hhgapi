@@ -105,7 +105,9 @@ class CompanyProjectController extends BaseController
         if(is_null($project)) return return_rest('0','','该用户没有项目');
         $project = $project->toArray();
         //项目介绍
-        $project['project_introduce'] = DB::table('company_project_detail')->where('company_project_id',$project['id'])->first()->project_introduce;
+        $project_introduce = DB::table('company_project_detail')->where('company_project_id',$project['id'])->first();
+        if(!$project_introduce) return return_rest('0','','项目介绍未添加,请联系harry');
+        $project['project_introduce'] = $project_introduce->project_introduce;
         //获取公司介绍
         $project['companyIntroduce'] = CompanyIntroduce::select('company_introduce.id','company_introduce.content','company_introduce_config.name')->where('company_id',$project['company_id'])
             ->leftJoin('company_introduce_config','company_introduce.config_id','=','company_introduce_config.id')
@@ -129,7 +131,30 @@ class CompanyProjectController extends BaseController
         $field = CompanyProjectFieldConfig::select('id','name')->where('parent_id',0)->get()->toArray();
         return return_rest('1',compact('field'),'项目领域列表');
     }
-
+    /**
+     * 更新项目领域
+     */
+    public function updateField()
+    {
+        $id = $this->request->get('id');
+        //TODO判断用户公司id是否匹配
+        $project = $this->project->find($id);
+        if($project){
+            $fids = json_decode($this->request->get('field'));
+            //判断field是否存在
+            foreach($fids as $fid){
+                $field = CompanyProjectField::where('project_id',$id)->where('field_id',$fid)->first();
+                if(is_null($field)){
+                    $field = new CompanyProjectField();
+                    $field->project_id = $id;
+                    $field->field_id = $fid;
+                    $field->save();
+                }
+            }
+            return return_rest('1','','领域更新成功');
+        }
+        return return_rest('0','','项目不存在');
+    }
     /**
      * 更新项目信息
      */
