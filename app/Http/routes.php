@@ -158,5 +158,9 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
         'as'    => 'image.upload',
         'uses'  => 'Image\ImageController@upload'
     ]);
+    $api->post('avatar/upload',[
+        'as'    => 'avatar.upload',
+        'uses'  => 'Image\ImageController@avatarUpload'
+    ]);
 
 });

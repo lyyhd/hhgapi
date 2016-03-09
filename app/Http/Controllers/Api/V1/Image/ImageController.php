@@ -42,6 +42,22 @@ class ImageController extends BaseController
         }
     }
 
+    public function avatarUpload()
+    {
+        //获取图片名称
+        $fileName = $this->request->file('image')->getClientOriginalName();
+        //
+        try {
+            \Image::make($this->request->file('image'))
+                ->resize(300,300)
+                ->save('uploads/avatars/'.$fileName.'.jpg');
+            return return_message(true,'uploads/avatars/'.$fileName.'.jpg');
+        }catch (\Exception $e){
+            //图片上传失败
+            return return_message(false,$e->getMessage());
+        }
+    }
+
     //头像上传
     public function avatar()
     {
@@ -75,4 +91,5 @@ class ImageController extends BaseController
     {
         \Image::make($file)->resize($width,$height)->save($path.$fileName);
     }
+
 }
