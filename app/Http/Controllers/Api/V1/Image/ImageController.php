@@ -35,7 +35,7 @@ class ImageController extends BaseController
             \Image::make($this->request->file('image'))
                 ->resize(300,300)
                 ->save('uploads/images/'.$fileName.'.jpg');
-            return return_message(true,'uploads/images/'.$fileName.'.jpg');
+            return return_message(true,'uploads/images/'.$fileName.$this->request->file('image')->getClientOriginalExtension());
         }catch (\Exception $e){
             //图片上传失败
             return return_message(false,$e->getMessage());
@@ -50,8 +50,8 @@ class ImageController extends BaseController
         try {
             \Image::make($this->request->file('image'))
                 ->resize(300,300)
-                ->save('uploads/avatars/'.$fileName.'.jpg');
-            return return_message(true,'uploads/avatars/'.$fileName.'.jpg');
+                ->save('uploads/avatars/'.$fileName);
+            return return_message(true,'uploads/avatars/'.$fileName);
         }catch (\Exception $e){
             //图片上传失败
             return return_message(false,$e->getMessage());
