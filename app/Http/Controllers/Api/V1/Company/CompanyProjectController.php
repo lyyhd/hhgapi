@@ -50,10 +50,11 @@ class CompanyProjectController extends BaseController
         //获取项目id
         $id = $this->request->get('id');
 
-        $project = $this->project->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency','city')->with('field')->find($id)->toArray();
+        $project = $this->project->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency','city')->with('field')->find($id);
         if(!$project){
             return return_rest('0','','该项目不存在');
         }
+        $project = $project->toArray();
         //获取项目创世人 联合创始人
         $project['customer'] = Customer::where('company_id',$project['company_id'])->select('id','name','position','avatar','mobile')->get()->toArray();
         //获取项目优势
@@ -85,6 +86,13 @@ class CompanyProjectController extends BaseController
             ->leftJoin('company_project_dynamic_config','company_project_dynamic.config_id','=','company_project_dynamic_config.id')
             ->orderBy('year','desc')
             ->orderBy('date','desc')->get()->toArray();
+        //获取项目投资轮次
+        $project_finance = DB::table('company_project_finance')
+            ->where('project_id',$project['id'])
+            ->orderBy('created_at','desc')
+            ->first();
+        $finance_name = $this->financeName($project_finance->id);
+        $project['project_finance'] = $finance_name;
         return return_rest('1',compact('project'),'项目详情');
     }
     /**
@@ -126,41 +134,7 @@ class CompanyProjectController extends BaseController
             ->where('project_id',$project['id'])
             ->orderBy('created_at','desc')
             ->first();
-        $finance_name = '';
-        
-        switch($project_finance->finance_id){
-            case '0':
-                $finance_name = '未融资';
-                break;
-            case '1':
-                $finance_name = '天使轮';
-                break;
-            case '2':
-                $finance_name = 'Pre-A轮';
-                break;
-            case '3':
-                $finance_name = 'A轮';
-                break;
-            case '4':
-                $finance_name = 'A+轮';
-                break;
-            case '5':
-                $finance_name = 'B轮';
-                break;
-            case '6':
-                $finance_name = 'B+轮';
-                break;
-            case '7':
-                $finance_name = 'C轮';
-                break;
-            case '8':
-                $finance_name = 'D轮';
-                break;
-            case '9':
-                $finance_name = 'E轮及以后';
-                break;
-        }
-
+        $finance_name = $this->financeName($project_finance->id);
         $project['project_finance'] = $finance_name;
         return return_rest('1',compact('project'),'项目详情');
     }
@@ -282,5 +256,45 @@ class CompanyProjectController extends BaseController
             return return_rest('0','',$e->getMessage());
         }
 
+    }
+
+    /**
+     * 获取投资轮次
+     */
+    private function financeName($finance_id)
+    {
+        switch($finance_id){
+            case '0':
+                $finance_name = '未融资';
+                break;
+            case '1':
+                $finance_name = '天使轮';
+                break;
+            case '2':
+                $finance_name = 'Pre-A轮';
+                break;
+            case '3':
+                $finance_name = 'A轮';
+                break;
+            case '4':
+                $finance_name = 'A+轮';
+                break;
+            case '5':
+                $finance_name = 'B轮';
+                break;
+            case '6':
+                $finance_name = 'B+轮';
+                break;
+            case '7':
+                $finance_name = 'C轮';
+                break;
+            case '8':
+                $finance_name = 'D轮';
+                break;
+            case '9':
+                $finance_name = 'E轮及以后';
+                break;
+        }
+        return $finance_name;
     }
 }
