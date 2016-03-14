@@ -14,7 +14,10 @@
         "toplan/laravel-sms": "~2.2.3",
         "intervention/image": "^2.3",
         "barryvdh/laravel-debugbar": "^2.1",
-        "goodspb/laravel-easemob": "^1.0"
+        "goodspb/laravel-easemob": "^1.0",
+        "predis/predis": "~1.1@dev",
+        "zgldh/qiniu-laravel-storage": "^0.3.0",
+        "guzzlehttp/guzzle": "^6.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -59,5 +62,11 @@
     },
     "config": {
         "preferred-install": "dist"
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "http://packagist.phpcomposer.com"
+        }
     }
 }

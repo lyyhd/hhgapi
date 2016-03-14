@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC+8',
+    'timezone' => 'Asia/Shanghai',
 //    'timezone' => 'UTC',
 
     /*
@@ -176,6 +176,8 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         //环信
         Goodspb\LaravelEasemob\LaravelEasemobServiceProvider::class,
+        //七牛
+        zgldh\QiniuStorage\QiniuFilesystemServiceProvider::class,
     ],
 
     /*

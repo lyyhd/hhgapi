@@ -78,7 +78,7 @@ return [
      * storePrefixKey: 存储key的prefix
      * storage: 存储方式
      */
-    'storage' => 'Toplan\Sms\SessionStorage',
+    'storage' => 'App\Storage\RedisStorage',
 
     'storePrefixKey' => 'laravel_sms_info',
 
