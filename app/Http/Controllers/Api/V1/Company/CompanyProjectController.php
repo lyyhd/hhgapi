@@ -127,6 +127,7 @@ class CompanyProjectController extends BaseController
             ->orderBy('created_at','desc')
             ->first();
         $finance_name = '';
+        
         switch($project_finance->finance_id){
             case '0':
                 $finance_name = '未融资';
