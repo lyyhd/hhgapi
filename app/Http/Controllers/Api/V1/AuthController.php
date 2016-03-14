@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Customer;
 use Goodspb\LaravelEasemob\Facades\Easemob;
+use Intervention\Image\Facades\Image;
 use Mockery\CountValidator\Exception;
 
 
@@ -31,7 +32,7 @@ class AuthController extends BaseController
 //                //$validator->errors()->add('error_msg', '用户名或密码错误');
 //                return $this->errorBadRequest(return_rest('0','','用户名或密码错误','10021'));
 //            });
-            return return_rest('0','','用户名或密码错误');
+            return return_rest('0',array('token'=>'','customer'=>array('id'=>'','avatar'=>'','type'=>'','nickname'=>'','name'=>'')),'用户名或密码错误');
         }
 
         if ($validator->fails()) {
@@ -41,10 +42,10 @@ class AuthController extends BaseController
             foreach($mobiles as $mobile){
                 if($mobile == 'The selected mobile is invalid.') return $this->errorBadRequest(return_rest('0','','手机号码未注册'));
             }
-            return return_rest('0','','请按照规则输入手机号码');
+            return return_rest('0',array('token'=>'','customer'=>array('id'=>'','avatar'=>'','type'=>'','nickname'=>'','name'=>'')),'请按照规则输入手机号码');
         }
         //登录成功 获取用户信息
-        $customer = Customer::select('type','name','nickname')->where('mobile',$this->request->get('mobile'))->first();
+        $customer = Customer::select('id','type','name','nickname','avatar')->where('mobile',$this->request->get('mobile'))->first();
         return return_rest('1',compact('token','customer'),'登陆成功');
     }
 
@@ -52,6 +53,19 @@ class AuthController extends BaseController
     {
         $newToken = \JWTAuth::parseToken()->refresh();
         return $this->response->array(['token' => $newToken]);
+    }
+
+    public function logout()
+    {
+        //获取当前用户token
+        $token = \JWTAuth::getToken();
+        //让token失效
+        try{
+            \JWTAuth::invalidate($token);
+            return return_rest('1','','已退出登录');
+        }catch (\Exception $e){
+            return return_rest('0','',$e->getMessage());
+        }
     }
 
     /**
@@ -65,6 +79,7 @@ class AuthController extends BaseController
             'password'     => 'required',
             'verifyCode'    => "required|verify_code:$token|confirm_mobile_rule:mobile_required,$token"
         ], [
+            'verifyCode.required' => '请输入短信验证码',
             'verify_code'   => '验证码错误',
             'confirm_mobile_not_change' => '当前手机号码与发送号码不符',
             'confirm_mobile_rule' => '验证码验证错误'
@@ -79,9 +94,14 @@ class AuthController extends BaseController
         if($messages->has('verifyCode')){
             $verifyCodes = $messages->get('verifyCode');
             foreach($verifyCodes as $verifyCode){
+                if($verifyCode == '请输入短信验证码') return return_rest('0','','请输入短信验证码');
                 if($verifyCode == '验证码错误') return return_rest('0','','验证码错误');
                 if($verifyCode == '验证码验证错误') return return_rest('0','','验证码验证错误');
             }
+        }
+        if($messages->has('password'))
+        {
+            return return_rest('0','','请输入密码');
         }
         //增加环信注册 失败返回false
         $easemob = Easemob::user_register($this->request->get('mobile'),$this->request->get('password'));
@@ -91,16 +111,20 @@ class AuthController extends BaseController
         $mobile     = $this->request->get('mobile');
         $password   = $this->request->get('password');
         //TODO用户类型 设置默认为3游客 1为创业者2为投资人
-        $type       = $this->request->has('type') ? $this->request->has('type') : 3;
+        $type       = $this->request->has('type') ? $this->request->get('type') : 3;
         //TODO 其他信息
         $customer = new Customer;
         $customer->mobile   = $mobile;
         $customer->password = bcrypt($password);
         $customer->type     = $type;
+        $customer->avatar     = 'uploads/avatars/'.$mobile.'.jpg';
         if($customer->save()){
             // 用户注册事件
             $token = \JWTAuth::fromUser($customer);
-            return return_rest('1',array('token'=>$token));
+            //为用户生成头像
+            $img = Image::make('uploads/avatars/avatar.jpg');
+            $img->save('uploads/avatars/'.$mobile.'.jpg');
+            return return_rest('1',compact('token','customer'));
         }
 
         $this->errorBadRequest(return_rest('0','','操作失败'));
