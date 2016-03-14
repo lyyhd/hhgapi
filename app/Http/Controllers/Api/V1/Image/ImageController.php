@@ -46,6 +46,7 @@ class ImageController extends BaseController
         }
     }
 
+    //无token上传图片
     public function avatarUpload()
     {
         try {

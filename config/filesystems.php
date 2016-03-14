@@ -83,7 +83,7 @@ return [
         'qiniu' => [
             'driver'  => 'qiniu',
             'domains' => [
-                'default'   => '7xrpi2.com1.z0.glb.clouddn.com', //你的七牛域名
+                'default'   => 'image.haihespace.com', //你的七牛域名
                 'https'     => '',         //你的HTTPS域名
                 'custom'    => '',                //你的自定义域名
             ],

@@ -121,6 +121,46 @@ class CompanyProjectController extends BaseController
             $project['teamAdvantage'] = $company_extend->story;
         }
         $project['is_company'] = '1';
+        //获取项目投资轮次
+        $project_finance = DB::table('company_project_finance')
+            ->where('project_id',$project['id'])
+            ->orderBy('created_at','desc')
+            ->first();
+        $finance_name = '';
+        switch($project_finance->finance_id){
+            case '0':
+                $finance_name = '未融资';
+                break;
+            case '1':
+                $finance_name = '天使轮';
+                break;
+            case '2':
+                $finance_name = 'Pre-A轮';
+                break;
+            case '3':
+                $finance_name = 'A轮';
+                break;
+            case '4':
+                $finance_name = 'A+轮';
+                break;
+            case '5':
+                $finance_name = 'B轮';
+                break;
+            case '6':
+                $finance_name = 'B+轮';
+                break;
+            case '7':
+                $finance_name = 'C轮';
+                break;
+            case '8':
+                $finance_name = 'D轮';
+                break;
+            case '9':
+                $finance_name = 'E轮及以后';
+                break;
+        }
+
+        $project['project_finance'] = $finance_name;
         return return_rest('1',compact('project'),'项目详情');
     }
     /**
