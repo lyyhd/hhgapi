@@ -80,19 +80,6 @@ return [
             'url_type'  => 'publicURL',
         ],
 
-        'qiniu' => [
-            'driver'  => 'qiniu',
-            'domains' => [
-                'default'   => 'image.haihespace.com', //你的七牛域名
-                'https'     => '',         //你的HTTPS域名
-                'custom'    => '',                //你的自定义域名
-            ],
-            'access_key'=> 'Byg-NA6pksIxWA69yOnnX-06i-rjrWCTxI4vvY-l',  //AccessKey
-            'secret_key'=> 'NVKPryt64bIC7WcM1cIJew_PIt3-DSv6lE-IKzku',  //SecretKey
-            'bucket'    => 'hhgzckj',  //Bucket名字
-            'notify_url'=> '',  //持久化处理回调地址
-        ],
-
     ],
 
 ];

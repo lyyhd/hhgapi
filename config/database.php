@@ -62,10 +62,6 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
-            'options'   => array(
-                PDO::ATTR_STRINGIFY_FETCHES => false,
-                PDO::ATTR_EMULATE_PREPARES => false,
-            ),
         ],
 
         'pgsql' => [

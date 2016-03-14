@@ -12,7 +12,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
-use zgldh\QiniuStorage\QiniuStorage;
 
 class BaseController extends Controller
 {
@@ -21,9 +20,6 @@ class BaseController extends Controller
 
     // 请求
     protected $request;
-
-    //七牛
-    protected $disk;
 
     // 返回错误的请求
     protected function errorBadRequest($message='')
@@ -34,7 +30,6 @@ class BaseController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->disk = QiniuStorage::disk('qiniu');
     }
 
 }

@@ -8,15 +8,11 @@ namespace App\Http\Controllers\Api\V1\Customer;
  */
 
 use \App\Http\Controllers\Api\BaseController;
-use App\Jobs\ChangeName;
 use App\Models\Company\Company;
-use App\Models\Company\CompanyExperience;
 use App\Models\Customer;
 use App\Transformer\CustomerTransformer;
 use Goodspb\LaravelEasemob\Facades\Easemob;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class CustomerController extends BaseController
 {
@@ -48,41 +44,10 @@ class CustomerController extends BaseController
      */
     public function show()
     {
-        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
-            ->withOnly('company',array('id','name','website','finance_status','weixin'))
-            ->find($this->user()->id);
+        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex')->withOnly('company',array('id','customer_id','name','website','finance_status'))->find($this->user()->id);
 
 //        return $this->response->item($user, new CustomerTransformer);
         $user = $user->toArray();
-        if(is_null($user['company'])){
-            $user['is_company'] = '0';
-        }else{
-            $user['is_company'] = '1';
-        }
-        $user['company'] = is_null($user['company']) ? "" : $user['company'];
-        $user['time'] = time();
-        return return_rest('1',compact('user'),'获取成功');
-    }
-    /**
-     * 根据手机号码获取用户信息
-     */
-    public function detailByMobile()
-    {
-        $mobile = $this->request->get('mobile');
-        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
-            ->withOnly('company',array('id','name','website','finance_status','weixin','email'))
-            ->where('mobile',$mobile)
-            ->first();
-        if(!$user){
-            return return_rest('0','','该用户不存在');
-        }
-        $user = $user->toArray();
-        if(is_null($user['company'])){
-            $user['is_company'] = '0';
-        }else{
-            $user['is_company'] = '1';
-        }
-        $user['company'] = is_null($user['company']) ? "" : $user['company'];
         return return_rest('1',compact('user'),'获取成功');
     }
 
@@ -111,13 +76,6 @@ class CustomerController extends BaseController
         $user->fill($this->request->input());
 
         if($user->save()){
-            //判断是否为更新name
-            if($this->request->has('name')){
-                //执行更换名称任务
-                $changeName = new ChangeName($user->id);
-                $this->dispatch($changeName);
-            }
-
             return return_rest('1','','更新成功');
         }
         return return_rest('0','','更新失败');
@@ -173,15 +131,10 @@ class CustomerController extends BaseController
         ]);
 
         if($validator->fails()){
-            if($validator->messages()->get('password')[0] === 'The password field is required.') return return_rest('0','','密码提供信息不正确');
+            if($validator->messages()->get('password')[0]) return return_rest('0','','修改密码失败');
         }
-
         //变更密码
         $customer = $this->user();
-        //变更环信密码
-        $easemob_reset_password = Easemob::reset_password($customer->mobile,$this->request->get('password'));
-        if(!$easemob_reset_password) return return_rest('0','','环信密码修改失败');
-        //更新数据库密码
         $customer->password = bcrypt($this->request->get('password'));
         if($customer->save()){
             return return_rest('1','','密码修改成功');
@@ -240,20 +193,16 @@ class CustomerController extends BaseController
                 $validator->errors()->add('old_password', '密码错误');
             });
         }
+
         if ($validator->fails()) {
-            if(count($validator->messages()->get('password')) > 0) return return_rest('0','',$validator->messages()->get('password')[0]);
-            if(count($validator->messages()->get('password_confirmation')) > 0) return return_rest('0','',$validator->messages()->get('password_confirmation')[0]);
-            if(count($validator->messages()->get('old_password')) > 0) return return_rest('0','',$validator->messages()->get('old_password')[0]);
+            return $this->errorBadRequest($validator->messages());
         }
-        //变更环信密码
-        $easemob_reset_password = Easemob::reset_password($customer->mobile,$this->request->get('password'));
-        if(!$easemob_reset_password) return return_rest('0','','环信密码修改失败');
+
         $customer->password = bcrypt($this->request->get('password'));
 
-        if($customer->save()){
-            return return_rest('1','','密码修改成功');
-        }
+        $customer->save();
 
+        return $this->response->noContent();
     }
 
     //上传头像
@@ -271,49 +220,4 @@ class CustomerController extends BaseController
             ->withOnly('field',['id','name'])//查询公司领域
             ->first();
     }
-
-    /**
-     * 联系人列表
-     *
-     */
-    public function contract()
-    {
-        //解析数据
-        $mobileList = $this->request->input('mobilelist');
-
-        $mobileList = json_decode($mobileList,true);
-        $mobiles = array();
-        try{
-            foreach ($mobileList as $list){
-                foreach ($list as $key => $val){
-                    array_push($mobiles,$val);
-                }
-            }
-        }catch(\Exception $e){
-            return return_rest('0','',$e->getMessage());
-        }
-
-        $list = $this->modelCustomer->select('name','mobile')->whereIn('mobile',$mobiles)->get()->toArray();
-
-        return return_rest('1',compact('list'),'获取列表成功');
-    }
-    /**
-     * 获取用户工作经历
-     */
-    public function employmentExperience()
-    {
-        $employment = Customer\EmployExperience::where('customer_id',$this->user()->id)->withOnly('company',array('id','logo','name','brief'))->get();
-
-        return return_rest('1',compact('employment'),'工作经历列表');
-    }
-    /**
-     *获取创业经历
-     */
-    public function companyExperience()
-    {
-        $experience = CompanyExperience::where('customer_id',$this->user()->id)->withOnly('company',array('id','logo','name','brief'))->get()->toArray();
-
-        return return_rest('1',compact('experience'),'我的创业经历');
-    }
-
 }

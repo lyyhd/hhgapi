@@ -20,7 +20,7 @@ class Company extends BaseModel
     protected $dates = ['deleted_at'];
 
     // 可填充的字段
-    protected $fillable = ['contract','address','finance_status','website','email'];
+    protected $fillable = ['contract','address'];
 
     public function field()
     {
@@ -34,9 +34,8 @@ class Company extends BaseModel
 
     public function customer()
     {
-        return $this->hasMany('App\Models\Customer');
+        return $this->belongsTo('App\Models\Customer');
     }
-
 
     public function finance()
     {
@@ -61,10 +60,5 @@ class Company extends BaseModel
     public function scopeSearchCustomer($query,$customer = false)
     {
         return $customer ? $query->where('customer_id',$customer) : null;
-    }
-    //获取公司介绍
-    public function introduce()
-    {
-        return $this->hasMany('App\Models\Company\CompanyIntroduce');
     }
 }

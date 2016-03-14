@@ -38,22 +38,9 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     $api->group(['namespace' => 'Article'], function($api){
         require (__DIR__ . '/Routes/Article.php');
     });
-    //活动相关api
-    //文章相关api
-    $api->group(['namespace' => 'Activity'], function($api){
-        require (__DIR__ . '/Routes/Activity.php');
-    });
     //公司相关api
     $api->group(['namespace' => 'Company'], function($api){
         require (__DIR__ . '/Routes/Company.php');
-    });
-    //投资相关
-    $api->group(['namespace' => 'Invest'],function($api){
-        require (__DIR__ . '/Routes/Invest.php');
-    });
-    //用户相关
-    $api->group(['namespace' => 'Customer'], function($api){
-        require (__DIR__ . '/Routes/Customer.php');
     });
     /**
      * 短信验证码
@@ -79,11 +66,6 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
         'as'   => 'auth.signup',
         'uses' => 'AuthController@signup'
     ]);
-    //退出
-    $api->post('auth/logout',[
-       'as'     => 'auth.logout',
-        'uses'  => 'AuthController@logout'
-    ]);
     /**
      * 忘记密码
      */
@@ -92,13 +74,17 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
         'as'    => 'customer.forgetVerify',
         'uses'  => 'Customer\CustomerController@forgetVerify'
     ]);
+    //修改新密码
+    $api->post('customer/forget/password',[
+        'as'    => 'customer.forgetPassword',
+        'uses'  => 'Customer\CustomerController@forgetPassword'
+    ]);
     //获取轮播图
     $api->get('carousel', [
         'as'    => 'carousel.index',
         'uses'  => 'Carousel\CarouselController@index'
     ]);
-    //根据用户手机号码获取用户信息
-    $api->get('customer/byMobile','Customer\CustomerController@detailByMobile')->name('customer.detailByMobile');
+
 
     // 需要jwt验证后才能使用的API
     $api->group(['middleware' => 'jwt.auth'], function ($api) {
@@ -130,22 +116,10 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
             'as'    => 'customer.forgetPassword',
             'uses'  => 'Customer\CustomerController@forgetPassword'
         ]);
-        //上传头像 临时
+        //上传图片 临时
         $api->post('customer/avatar',[
             'as'    => 'customer.avatar',
             'uses'  => 'Image\ImageController@avatar'
-        ]);
-        //上传
-
-        //修改新密码
-        $api->post('customer/forget/password',[
-            'as'    => 'customer.forgetPassword',
-            'uses'  => 'Customer\CustomerController@forgetPassword'
-        ]);
-        //获取联系人列表
-        $api->post('customer/contract',[
-            'as'    => 'customer.contract',
-            'uses'  => 'Customer\CustomerController@contract'
         ]);
 
         //获取用户详情
@@ -157,10 +131,6 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     $api->post('image/upload',[
         'as'    => 'image.upload',
         'uses'  => 'Image\ImageController@upload'
-    ]);
-    $api->post('avatar/upload',[
-        'as'    => 'avatar.upload',
-        'uses'  => 'Image\ImageController@avatarUpload'
     ]);
 
 });
