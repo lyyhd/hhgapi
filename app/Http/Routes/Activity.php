@@ -18,6 +18,8 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->post('activity/attention', ['as' => 'activity.postAttention', 'uses' => 'ActivityController@doAttention']);
     $api->get('activity/collect', ['as' => 'activity.getCollect', 'uses' => 'ActivityController@checkCollect']);
     $api->post('activity/collect', ['as' => 'activity.postCollect', 'uses' => 'ActivityController@doCollect']);
+    //评论时 检测用户是否被禁言
+    $api->get('activity/gag','ActivityController@checkGag')->name('activity.checkGag');
     //添加评论
     $api->post('activity/comment','ActivityController@addComment')->name('activity.addComment');
     //获取关注列表
@@ -26,6 +28,5 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->get('activity/apply','ActivityController@checkApply')->name('activity.checkApply');
     //活动报名
     $api->post('activity/apply','ActivityController@apply')->name('activity.apply');
-    //评论时 检测用户是否被禁言
-    $api->get('activity/gag','ActivityController@checkGag')->name('activity.checkGag');
+
 });
