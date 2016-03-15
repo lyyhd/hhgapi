@@ -223,42 +223,22 @@ class ActivityController extends BaseController
         $id = $this->request->get('id');
         //获取评论内容
         $content = $this->request->get('content');
-        //判断是否为对评论回复
-        if($comment_id = $this->request->get('comment_id'))
-        {
-            $reply = new ActivityCommentReply();
-            $reply->comment_id = $comment_id;
-            $reply->content = $content;
-            $reply->customer_id = $this->user()->id;
-            $reply->customer_name = $this->user()->name;
-            $reply->customer_mobile = $this->user()->mobile;
-            if($reply->save()){
-                //获取评论列表c
-                return return_rest('1','','回复添加成功');
-            }
-        }
-        //判断是否为对回复进行回复
-        //判断是否为回复
-        if($reply_id = $this->request->get('reply_id'))
-        {
-            $reply = new ActivityCommentReply();
-            $reply->reply_id = $reply_id;
-            $reply->content = $content;
-            $reply->customer_id = $this->user()->id;
-            $reply->customer_name = $this->user()->name;
-            $reply->customer_mobile = $this->user()->mobile;
-            if($reply->save()){
-                //获取评论列表c
-                return return_rest('1','','回复添加成功');
-            }
-        }
         //增加评论
         $comment = new ActivityComment();
         $comment->activity_id = $id;
         $comment->content = $content;
         $comment->customer_id = $this->user()->id;
         $comment->customer_name = $this->user()->name;
-        $comment->mobile = $this->user()->mobile;
+        //判断回复用户
+        if($reply_customer_id = $this->request->get('reply_customer_id')){
+            //获取用户信息
+            $reply_customer = Customer::find($reply_customer_id);
+            if(!$reply_customer){
+                return return_rest('0','','评论添加失败');
+            }
+            $comment->reply_customer_id = $reply_customer_id;
+            $comment->reply_customer_name = $reply_customer->name;
+        }
         if($comment->save()){
             //获取评论列表c
             return return_rest('1','','评论添加成功');
@@ -273,8 +253,7 @@ class ActivityController extends BaseController
         //获取活动id
         $id = $this->request->get('id');
         //根据活动id获取相关评论
-        $comments = ActivityComment::select('id','content','customer_name','created_at','mobile')
-            ->withOnly('reply',array('id','comment_id','customer_name','content'))
+        $comments = ActivityComment::select('id','content','customer_id','customer_name','created_at','reply_customer_id','reply_customer_name')
             ->where('activity_id',$id)
             ->orderBy('created_at','desc')
             ->get()->toArray();
