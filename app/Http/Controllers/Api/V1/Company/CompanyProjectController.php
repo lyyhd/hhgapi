@@ -202,7 +202,7 @@ class CompanyProjectController extends BaseController
         }
         $content = $this->request->get('content');
         //更新团队优势 团队介绍
-        $extend = CompanyExtend::where('company_id',$company->id)->first();
+        $extend = CompanyExtend::where('company_id',$company->company_id)->first();
         if(is_null($extend)){
             return return_rest('0','','更新失败');
         }
