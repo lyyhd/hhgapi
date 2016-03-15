@@ -81,8 +81,9 @@ class ImageController extends BaseController
         $customer = $this->user();
         try {
             $file = $this->request->file('avatar');
-            $fileName = $this->avatar_path.$customer->mobile.'.'.$file->getClientOriginalExtension();
-            $qnName = $customer->mobile.'.'.$file->getClientOriginalExtension();
+//            $fileName = $this->avatar_path.$customer->mobile.'.'.$file->getClientOriginalExtension();
+            $fileName = $this->avatar_path.$customer->mobile.'.jpg';
+            $qnName = $customer->mobile.'.jpg';
             \Image::make($file)->save($fileName);
             //上传图片至七牛
             if($this->disk->put($qnName,fopen($fileName, 'r'))){
