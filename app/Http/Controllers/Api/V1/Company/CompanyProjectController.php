@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\V1\Company;
 
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Company\Company;
+use App\Models\Company\CompanyExtend;
 use App\Models\Company\CompanyFinance;
 use App\Models\Company\CompanyIntroduce;
 use App\Models\Company\CompanyProject;
@@ -121,10 +122,10 @@ class CompanyProjectController extends BaseController
             ->leftJoin('company_introduce_config','company_introduce.config_id','=','company_introduce_config.id')
             ->orderBy('company_introduce.config_id','asc')->get()->toArray();
         //获取企业网站
-        $project['website'] = Company::where('id',$project['company_id'])->first()->website;
+        $project['website'] = Company::where('id',$user->company_id)->first()->website;
         //获取项目优势
         $project['teamAdvantage'] = "";
-        $company_extend = DB::table('company_extend')->select('story')->where('company_id',$project['company_id'])->first();
+        $company_extend = CompanyExtend::select('story')->where('company_id',$user->company_id)->first();
         if($company_extend){
             $project['teamAdvantage'] = $company_extend->story;
         }
@@ -194,7 +195,22 @@ class CompanyProjectController extends BaseController
     {
         //获取项目id
         $id = $this->request->get('id');
-
+        //获取公司id
+        $company = CompanyProject::find($id);
+        if(!$company){
+            return return_rest('0','','公司不存在');
+        }
+        $content = $this->request->get('content');
+        //更新团队优势 团队介绍
+        $extend = CompanyExtend::where('company_id',$company->id)->first();
+        if(is_null($extend)){
+            return return_rest('0','','更新失败');
+        }
+        $extend->story = $content;
+        if($extend->save()){
+            return return_rest('1','','更新成功');
+        }
+        return return_rest('0','','更新失败');
     }
     /**
      * 项目logo替换

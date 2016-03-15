@@ -273,7 +273,7 @@ class ActivityController extends BaseController
             $apply['isApply'] = '1';
             return return_rest('1',compact('apply'),'该用户已报名');
         }
-        return return_rest('0',array('isApply'=>'0'),'未报名');
+        return return_rest('1',array('isApply'=>'0'),'未报名');
     }
     /**
      * 活动报名

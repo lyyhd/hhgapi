@@ -60,4 +60,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->put('company/introduce','CompanyController@introduce')->name('company.update.introduce');
     //更新项目领域
     $api->put('company/project/field','CompanyProjectController@updateField')->name('company.project.field.update');
+    //更新团队介绍 团队优势
+    $api->put('company/project/team','CompanyProjectController@updateTeam')->name('company.team');
 });
