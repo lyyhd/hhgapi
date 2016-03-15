@@ -229,6 +229,7 @@ class ActivityController extends BaseController
         $comment->content = $content;
         $comment->customer_id = $this->user()->id;
         $comment->customer_name = $this->user()->name;
+        $comment->customer_avatar = $this->user()->avatar;
         //判断回复用户
         if($reply_customer_id = $this->request->get('reply_customer_id')){
             //获取用户信息
@@ -253,7 +254,7 @@ class ActivityController extends BaseController
         //获取活动id
         $id = $this->request->get('id');
         //根据活动id获取相关评论
-        $comments = ActivityComment::select('id','content','customer_id','customer_name','created_at','reply_customer_id','reply_customer_name')
+        $comments = ActivityComment::select('id','content','customer_id','customer_name','customer_avatar','created_at','reply_customer_id','reply_customer_name')
             ->where('activity_id',$id)
             ->orderBy('created_at','desc')
             ->get()->toArray();
