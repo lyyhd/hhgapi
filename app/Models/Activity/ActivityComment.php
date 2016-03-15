@@ -18,11 +18,11 @@ class ActivityComment extends BaseModel
     //获取评论对应的回复
     public function reply()
     {
-        $this->hasMany('App\Models\Activity\ActivityCommentReply')->with('customer');
+       return $this->hasMany('App\Models\Activity\ActivityCommentReply','comment_id')->withOnly('reply',array('id','customer_name','content','reply_id'));
     }
     //获取评论对应用户
     public function customer()
     {
-        $this->hasOne('App\Models\Customer');
+        return $this->hasOne('App\Models\Customer');
     }
 }

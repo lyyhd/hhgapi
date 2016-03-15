@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Api\V1\Activity;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Activity\Activity;
 use App\Models\Activity\ActivityComment;
+use App\Models\Activity\ActivityCommentReply;
 use App\Models\Activity\ActivityCustomerAttention;
 use App\Models\Activity\ActivityCustomerCollect;
 use App\Models\Customer;
@@ -222,6 +223,35 @@ class ActivityController extends BaseController
         $id = $this->request->get('id');
         //获取评论内容
         $content = $this->request->get('content');
+        //判断是否为对评论回复
+        if($comment_id = $this->request->get('comment_id'))
+        {
+            $reply = new ActivityCommentReply();
+            $reply->comment_id = $comment_id;
+            $reply->content = $content;
+            $reply->customer_id = $this->user()->id;
+            $reply->customer_name = $this->user()->name;
+            $reply->customer_mobile = $this->user()->mobile;
+            if($reply->save()){
+                //获取评论列表c
+                return return_rest('1','','回复添加成功');
+            }
+        }
+        //判断是否为对回复进行回复
+        //判断是否为回复
+        if($reply_id = $this->request->get('reply_id'))
+        {
+            $reply = new ActivityCommentReply();
+            $reply->reply_id = $reply_id;
+            $reply->content = $content;
+            $reply->customer_id = $this->user()->id;
+            $reply->customer_name = $this->user()->name;
+            $reply->customer_mobile = $this->user()->mobile;
+            if($reply->save()){
+                //获取评论列表c
+                return return_rest('1','','回复添加成功');
+            }
+        }
         //增加评论
         $comment = new ActivityComment();
         $comment->activity_id = $id;
@@ -243,11 +273,11 @@ class ActivityController extends BaseController
         //获取活动id
         $id = $this->request->get('id');
         //根据活动id获取相关评论
-        $comments = ActivityComment::select('content','customer_name','created_at','mobile')
+        $comments = ActivityComment::select('id','content','customer_name','created_at','mobile')
+            ->withOnly('reply',array('id','comment_id','customer_name','content'))
             ->where('activity_id',$id)
             ->orderBy('created_at','desc')
-            ->get()
-            ->toArray();
+            ->get()->toArray();
         return return_rest('1',compact('comments'),'操作成功');
     }
 }

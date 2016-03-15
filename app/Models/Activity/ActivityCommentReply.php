@@ -13,10 +13,15 @@ use App\Models\BaseModel;
 
 class ActivityCommentReply extends BaseModel
 {
-    protected $table = 'activity_comment_replies';
+    protected $table = 'activity_comments_replies';
 
     public function customer()
     {
-        $this->hasOne('App\Models\Customer');
+        return $this->hasOne('App\Models\Customer');
+    }
+
+    public function reply()
+    {
+        return $this->hasMany('App\Models\Activity\ActivityCommentReply','reply_id','id');
     }
 }
