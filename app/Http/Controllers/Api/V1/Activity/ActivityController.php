@@ -276,4 +276,27 @@ class ActivityController extends BaseController
     /**
      * 活动报名
      */
+    public function apply()
+    {
+        //获取报名用户id
+        $customer_id = $this->user()->id;
+        //活动id
+        $activity_id = $this->request->get('id');
+        //检查用户是否已报名
+        if($apply = Apply::isCustomerApply($customer_id,$activity_id)){
+            return return_rest('0',compact('apply'),'该用户已报名');
+        }
+        //获取报名信息
+        $apply = new Apply();
+        $apply->name = $this->request->get('name');
+        $apply->mobile = $this->request->get('mobile');
+        $apply->email = $this->request->get('email');
+        $apply->customer_id = $customer_id;
+        $apply->activity_id = $activity_id;
+        if($apply->save()){
+            return return_rest('1','','报名成功');
+        }
+        return return_rest('0','','报名失败');
+    }
+
 }

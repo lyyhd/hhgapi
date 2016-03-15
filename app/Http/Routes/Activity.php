@@ -24,4 +24,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->get('activity/attentionList','ActivityController@attentionList')->name('activity.attentionList');
     //检查用户是否已报名活动
     $api->get('activity/apply','ActivityController@checkApply')->name('activity.checkApply');
+    //活动报名
+    $api->post('activity/apply','ActivityController@apply')->name('activity.apply');
 });
