@@ -15,6 +15,7 @@ use App\Models\Activity\ActivityComment;
 use App\Models\Activity\ActivityCommentReply;
 use App\Models\Activity\ActivityCustomerAttention;
 use App\Models\Activity\ActivityCustomerCollect;
+use App\Models\Activity\Apply;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -254,10 +255,25 @@ class ActivityController extends BaseController
         //获取活动id
         $id = $this->request->get('id');
         //根据活动id获取相关评论
-        $comments = ActivityComment::select('id','content','customer_id','customer_name','customer_avatar','created_at','reply_customer_id','reply_customer_name')
+        $comments = ActivityComment::select('id','mobile','content','customer_id','customer_name','customer_avatar','created_at','reply_customer_id','reply_customer_name')
             ->where('activity_id',$id)
             ->orderBy('created_at','desc')
             ->get()->toArray();
         return return_rest('1',compact('comments'),'操作成功');
     }
+    /**
+     * 判读用户是否报名活动
+     */
+    public function checkApply()
+    {
+        $customer_id = $this->user()->id;
+        $activity_id = $this->request->get('id');
+        if($apply = Apply::isCustomerApply($customer_id,$activity_id)){
+            return return_rest('1',compact('apply'),'该用户已报名');
+        }
+        return return_rest('0','','未报名');
+    }
+    /**
+     * 活动报名
+     */
 }
