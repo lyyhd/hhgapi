@@ -26,4 +26,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->get('activity/apply','ActivityController@checkApply')->name('activity.checkApply');
     //活动报名
     $api->post('activity/apply','ActivityController@apply')->name('activity.apply');
+    //评论时 检测用户是否被禁言
+    $api->get('activity/gag','ActivityController@checkGag')->name('activity.checkGag');
 });

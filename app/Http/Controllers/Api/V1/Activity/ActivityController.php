@@ -300,5 +300,15 @@ class ActivityController extends BaseController
         }
         return return_rest('0','','报名失败');
     }
-
+    //检查用户是否被禁言
+    public function checkGag()
+    {
+        //获取用户是否被禁言
+        $customer = Customer::find($this->user()->id);
+        if($customer){
+            $isGag = $customer->is_activity_comment;
+            return return_rest('1',array('isGag'=>$isGag),'用户是否被禁言');
+        }
+        return return_rest('0','','该用户不存在');
+    }
 }
