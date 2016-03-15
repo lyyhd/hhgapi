@@ -269,9 +269,11 @@ class ActivityController extends BaseController
         $customer_id = $this->user()->id;
         $activity_id = $this->request->get('id');
         if($apply = Apply::isCustomerApply($customer_id,$activity_id)){
+            $apply = $apply->toArray();
+            $apply['isApply'] = '1';
             return return_rest('1',compact('apply'),'该用户已报名');
         }
-        return return_rest('0','','未报名');
+        return return_rest('0',array('isApply'=>'0'),'未报名');
     }
     /**
      * 活动报名

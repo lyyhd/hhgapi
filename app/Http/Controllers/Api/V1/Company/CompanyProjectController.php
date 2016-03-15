@@ -190,7 +190,12 @@ class CompanyProjectController extends BaseController
     /**
      *更新项目介绍
     */
-//    public function
+    public function updateTeam()
+    {
+        //获取项目id
+        $id = $this->request->get('id');
+
+    }
     /**
      * 项目logo替换
      */
