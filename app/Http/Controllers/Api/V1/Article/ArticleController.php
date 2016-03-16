@@ -38,7 +38,7 @@ class ArticleController extends BaseController
         //判断是否获取首页文章
         if($this->request->get('index') == '1')
         {
-            $article = $this->article->where('is_index','1')->limit(8)->offset(0)->orderBy('indexed_at','desc')->get();
+            $article = $this->article->where('is_index','1')->limit(8)->offset(0)->orderBy('indexed_at','desc')->paginate();
             return return_rest('1',compact('article'),'获取首页文章列表');
         }
         //获取文章列表
