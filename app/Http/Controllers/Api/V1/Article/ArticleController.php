@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\BaseController;
 use App\Models\Article;
 use App\Models\ArticleComment;
 use App\Models\ArticleType;
+use App\Models\Customer;
 use App\Transformer\ArticleTransformer;
 use DebugBar\StandardDebugBar;
 use Illuminate\Http\Request;
