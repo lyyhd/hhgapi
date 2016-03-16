@@ -29,6 +29,11 @@ class Article extends BaseModel
 
         }
     }
+    //获取位于发布状态的文章
+    public function scopeByStatus($query)
+    {
+        return $query->where('status_id', '=' , '1');
+    }
     //阅读量+1
     //
     //设置关联

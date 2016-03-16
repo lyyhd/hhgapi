@@ -38,25 +38,20 @@ class ArticleController extends BaseController
         //判断是否获取首页文章
         if($this->request->get('index') == '1')
         {
-            $article = $this->article->where('is_index','1')->limit(8)->offset(0)->orderBy('indexed_at','desc')->paginate();
+            $article = $this->article->where('is_index','1')
+                ->byStatus()
+                ->limit(8)->offset(0)
+                ->orderBy('indexed_at','desc')
+                ->paginate();
             return return_rest('1',compact('article'),'获取首页文章列表');
         }
         //获取文章列表
         if($type = $this->request->get('type')){
-            $article = $this->article->where('type_id',$type)->paginate();
+            $article = $this->article->where('type_id',$type)->byStatus()->paginate();
             return return_rest('1',compact('article'),'获取文章列表');
         }
-        $article = $this->article->orderBy('created_at','desc')->paginate(15);
+        $article = $this->article->orderBy('created_at','desc')->byStatus()->paginate(15);
         return return_rest('1',compact('article'),'获取文章列表');
-    }
-
-    /**
-     * 获取首页文章
-     *
-     */
-    public function indexArticle()
-    {
-
     }
 
     //获取文章详情
