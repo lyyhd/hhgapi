@@ -55,6 +55,10 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     $api->group(['namespace' => 'Customer'], function($api){
         require (__DIR__ . '/Routes/Customer.php');
     });
+    //用户消息相关
+    $api->group(['namespace' => 'Message'], function($api){
+        require (__DIR__ . '/Routes/Message.php');
+    });
     /**
      * 短信验证码
      */

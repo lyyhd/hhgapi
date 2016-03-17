@@ -12,10 +12,11 @@ namespace App\Models;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Cmgmyr\Messenger\Traits\Messagable;
 
 class Customer extends BaseModel implements AuthenticatableContract
 {
-    use SoftDeletes, Authenticatable;
+    use SoftDeletes, Authenticatable, Messagable;
 
     // 查询用户的时候，不暴露密码
     protected $hidden = ['password'];

@@ -17,7 +17,8 @@
         "goodspb/laravel-easemob": "^1.0",
         "predis/predis": "~1.1@dev",
         "zgldh/qiniu-laravel-storage": "^0.3.0",
-        "guzzlehttp/guzzle": "^6.1"
+        "guzzlehttp/guzzle": "^6.1",
+        "cmgmyr/messenger": "~2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

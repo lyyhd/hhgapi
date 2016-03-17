@@ -242,6 +242,8 @@ class ActivityController extends BaseController
             $comment->reply_customer_name = $reply_customer->name;
         }
         if($comment->save()){
+            //对活动进行+1的评论
+            $this->article->find($id)->increment('comments');
             //获取评论列表c
             return return_rest('1','','评论添加成功');
         }

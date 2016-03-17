@@ -178,6 +178,8 @@ return [
         Goodspb\LaravelEasemob\LaravelEasemobServiceProvider::class,
         //七牛
         zgldh\QiniuStorage\QiniuFilesystemServiceProvider::class,
+        //laravel message
+        Cmgmyr\Messenger\MessengerServiceProvider::class
     ],
 
     /*

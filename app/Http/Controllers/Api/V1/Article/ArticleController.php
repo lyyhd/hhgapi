@@ -40,7 +40,7 @@ class ArticleController extends BaseController
         {
             $article = $this->article->where('is_index','1')
                 ->byStatus()
-                ->limit(8)->offset(0)
+                ->limit(6)->offset(0)
                 ->orderBy('indexed_at','desc')
                 ->paginate();
             return return_rest('1',compact('article'),'获取首页文章列表');
@@ -132,6 +132,8 @@ class ArticleController extends BaseController
             $comment->reply_customer_name = $reply_customer->name;
         }
         if($comment->save()){
+            //对文章进行+1的评论
+            $this->article->find($id)->increment('comments');
             //获取评论列表c
             return return_rest('1','','评论添加成功');
         }
