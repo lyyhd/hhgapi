@@ -10,9 +10,13 @@ namespace App\Models;
 
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ArticleComment extends BaseModel
 {
     protected $table = 'article_comments';
+
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
 }
