@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b2117cb7dafcbac37a0b96db908f868e",
-    "content-hash": "033b661a47268c45761692868138ea9c",
+    "hash": "75802c4f16d18d3b59a1b7bdd47a2c64",
+    "content-hash": "b371943d2dc44d55b65ab4029716b2f6",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -2924,7 +2924,7 @@
         },
         {
             "name": "toplan/laravel-sms",
-            "version": "2.2.6",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/toplan/laravel-sms.git",
@@ -4410,7 +4410,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "dingo/api": 20,
-        "predis/predis": 20
+        "predis/predis": 20,
+        "toplan/laravel-sms": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
