@@ -236,18 +236,18 @@ class ActivityController extends BaseController
             //获取用户信息
             $reply_customer = Customer::find($reply_customer_id);
             if(!$reply_customer){
-                return return_rest('0','','评论添加失败');
+                return return_rest('0','','评论添加失败1');
             }
             $comment->reply_customer_id = $reply_customer_id;
             $comment->reply_customer_name = $reply_customer->name;
         }
         if($comment->save()){
             //对活动进行+1的评论
-            $this->article->find($id)->increment('comments');
+            $this->activity->find($id)->increment('comments');
             //获取评论列表c
             return return_rest('1','','评论添加成功');
         }
-        return return_rest('0','','评论添加失败');
+        return return_rest('0','','评论添加失败2');
     }
     /**
      * 获取活动评论
