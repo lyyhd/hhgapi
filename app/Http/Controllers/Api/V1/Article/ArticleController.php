@@ -67,7 +67,7 @@ class ArticleController extends BaseController
         $id = $this->request->get('id');
         //对文章进行+1的阅读量
         $this->article->find($id)->increment('view');
-        dd($this->article->find($id)->increment('view'));
+        return return_rest('1','','文章阅读量+1');
     }
     /**
      * 获取新闻分类
