@@ -169,6 +169,7 @@ return [
          * sms
          */
         Toplan\PhpSms\PhpSmsServiceProvider::class,
+        Toplan\Sms\SmsManagerServiceProvider::class,
         //imageservice
         Intervention\Image\ImageServiceProviderLaravel5::class,
         //laravel debugger
@@ -229,7 +230,8 @@ return [
         'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory'=> Tymon\JWTAuth\Facades\JWTFactory::class,
         //sms
-        'PhpSms' => \Toplan\PhpSms\Facades\Sms::class,
+        'PhpSms' => Toplan\PhpSms\Facades\Sms::class,
+        'SmsManager' => Toplan\Sms\Facades\SmsManager::class,
         //images
         'Image'      => Intervention\Image\Facades\Image::class,
         //laravel debugger

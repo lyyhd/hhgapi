@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6e967124a0a189e6774f06276f87112f",
-    "content-hash": "8f6e32b0d3dcabc24c07ae8788a58fd6",
+    "hash": "b2117cb7dafcbac37a0b96db908f868e",
+    "content-hash": "033b661a47268c45761692868138ea9c",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -2921,6 +2921,51 @@
                 "dump"
             ],
             "time": "2016-02-13 09:23:44"
+        },
+        {
+            "name": "toplan/laravel-sms",
+            "version": "2.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/toplan/laravel-sms.git",
+                "reference": "8b09fa6c95cd0b9e1882ca4c14a64c256d7b2b03"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://packagist.phpcomposer.com/files/toplan/laravel-sms/8b09fa6c95cd0b9e1882ca4c14a64c256d7b2b03.zip",
+                "reference": "8b09fa6c95cd0b9e1882ca4c14a64c256d7b2b03",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "toplan/phpsms": "~1.2.2"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ],
+                "psr-0": {
+                    "Toplan\\Sms": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "toplan",
+                    "email": "toplan710@gmail.com"
+                }
+            ],
+            "description": "sms send package for laravel",
+            "keywords": [
+                "laravel sms",
+                "laravel-sms",
+                "sms"
+            ],
+            "time": "2016-01-27 03:33:09"
         },
         {
             "name": "toplan/phpsms",
