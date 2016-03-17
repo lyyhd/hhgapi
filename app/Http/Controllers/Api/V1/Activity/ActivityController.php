@@ -231,6 +231,7 @@ class ActivityController extends BaseController
         $comment->customer_id = $this->user()->id;
         $comment->customer_name = $this->user()->name;
         $comment->customer_avatar = $this->user()->avatar;
+        $comment->customer_mobile = $this->user()->mobile;
         //判断回复用户
         if($reply_customer_id = $this->request->get('reply_customer_id')){
             //获取用户信息
