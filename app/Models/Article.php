@@ -16,6 +16,7 @@ class Article extends BaseModel
     protected $table = 'articles';
 
     use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
     //
     public function getArticleByFilter($filter, $limit = 15)

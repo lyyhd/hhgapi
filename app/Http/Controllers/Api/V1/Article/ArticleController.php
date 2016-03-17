@@ -93,7 +93,7 @@ class ArticleController extends BaseController
         return return_rest('0','','该用户不存在');
     }
     /**
-     * 获取活动评论
+     * 获取文章评论
      */
     public function comment()
     {
