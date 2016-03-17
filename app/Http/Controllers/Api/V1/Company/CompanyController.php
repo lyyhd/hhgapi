@@ -187,4 +187,18 @@ class CompanyController extends BaseController
         }
         return return_rest('0','','介绍不存在');
     }
+    /**
+     * 对公司访问量+1
+     *
+     */
+    public function view()
+    {
+        $id = $this->request->get('id');
+        if(!$id){
+            return return_rest('0','','该项目不存在,别逗了');
+        }
+        //对访问量进行+1
+        $this->company->find($id)->increment('view');
+        return return_rest('1','','成功增加');
+    }
 }

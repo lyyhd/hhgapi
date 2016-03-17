@@ -34,6 +34,9 @@ $api->get('company/field/{id}/detail',[
     'as'    => 'company.field',
     'uses'  => 'CompanyFieldController@fieldDetail',
 ]);
+//公司访问量+1
+$api->get('company/view','CompanyController@view')->name('company.view');
+
 
 /*
  * 项目相关
@@ -44,6 +47,8 @@ $api->get('company/project','CompanyProjectController@index')->name('company.pro
 $api->get('company/project/detail','CompanyProjectController@show')->name('company.project.detail');
 //获取项目领域列表
 $api->get('company/project/field','CompanyProjectController@field')->name('company.project.field');
+//项目访问量+1
+$api->get('company/project/view','CompanyProjectController@viewPlus')->name('company.project.view');
 // 需要jwt验证后才能使用的API
 $api->group(['middleware' => 'jwt.auth'], function ($api) {
     //获取我的项目

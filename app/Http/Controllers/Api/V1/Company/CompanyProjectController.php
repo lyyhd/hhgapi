@@ -51,7 +51,7 @@ class CompanyProjectController extends BaseController
         //获取项目id
         $id = $this->request->get('id');
 
-        $project = $this->project->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency','city')->with('field')->find($id);
+        $project = $this->project->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','subscribe_amount','currency','city','view','share')->with('field')->find($id);
         if(!$project){
             return return_rest('0','','该项目不存在');
         }
@@ -92,7 +92,7 @@ class CompanyProjectController extends BaseController
             ->where('project_id',$project['id'])
             ->orderBy('created_at','desc')
             ->first();
-        $finance_name = $this->financeName($project_finance->id);
+        $finance_name = $this->financeName($project_finance->finance_id);
         $project['project_finance'] = $finance_name;
         return return_rest('1',compact('project'),'项目详情');
     }
@@ -108,7 +108,7 @@ class CompanyProjectController extends BaseController
         }
         //获取项目信息
         $project = $this->project
-            ->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','currency','city')->where('company_id',$user->company_id)
+            ->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','subscribe_amount','currency','city','view','share')->where('company_id',$user->company_id)
             ->with('field')
             ->first();
         if(is_null($project)) return return_rest('0','','该用户没有项目');
@@ -317,5 +317,18 @@ class CompanyProjectController extends BaseController
                 break;
         }
         return $finance_name;
+    }
+    /**
+     * 访问量+1
+     */
+    public function viewPlus()
+    {
+        $id = $this->request->get('id');
+        if(!$id){
+            return return_rest('0','','该项目不存在,别逗了');
+        }
+        //对访问量进行+1
+        $this->project->find($id)->increment('view');
+        return return_rest('1','','成功增加');
     }
 }

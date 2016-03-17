@@ -33,3 +33,14 @@ if (! function_exists('return_rest')) {
         return array('json' => compact('state','data','msg'));
     }
 }
+if (! function_exists('formatMoney')){
+    function formatMoney($money)
+    {
+//        if($money >= 10000){
+//            return sprintf("%.2f", $money/10000);
+//        }else{
+//            return $money;
+//        }
+        return sprintf("%.2f", $money/10000);
+    }
+}
