@@ -53,7 +53,15 @@ class CustomerController extends BaseController
             ->find($this->user()->id);
         //如果用户为投资人 获取投资人相关字段
         if($user->type == '2'){
-
+            //获取投资人信息
+            $user['investor'] = DB::table('customer_investor')->where('customer_id',$user->id)->first();
+            $user['invest'] = DB::table('customer_invest_field')->where('customer_id',$user->id)->get();
+            if(is_null($user['investor'])){
+                $user['investor'] = '';
+            }
+            if(count($user['invest']) == 0){
+                $user['invest'] = '';
+            }
         }
 
 //        return $this->response->item($user, new CustomerTransformer);
