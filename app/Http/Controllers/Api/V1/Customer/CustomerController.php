@@ -51,14 +51,14 @@ class CustomerController extends BaseController
         $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
             ->withOnly('company',array('id','name','website','finance_status','weixin'))
             ->find($this->user()->id);
+        //如果用户为投资人 获取投资人相关字段
+        if($user->type == '2'){
+
+        }
 
 //        return $this->response->item($user, new CustomerTransformer);
         $user = $user->toArray();
-        if(is_null($user['company'])){
-            $user['is_company'] = '0';
-        }else{
-            $user['is_company'] = '1';
-        }
+        $user['is_company'] = is_null($user['company']) ? '0' : '1';
         $user['company'] = is_null($user['company']) ? "" : $user['company'];
         $user['time'] = time();
         return return_rest('1',compact('user'),'获取成功');

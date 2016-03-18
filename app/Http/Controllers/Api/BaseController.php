@@ -37,4 +37,14 @@ class BaseController extends Controller
         $this->disk = QiniuStorage::disk('qiniu');
     }
 
+    /**
+     * 图片上传至七牛
+     */
+    public function qiniuUpload($filename,$path = '')
+    {
+        $this->disk->put($filename,fopen(storage_path($path).'/'.$filename, 'r'));
+        $filenameUrl = $this->disk->downloadUrl($filename);
+        return $filenameUrl;
+    }
+
 }

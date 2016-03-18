@@ -230,12 +230,14 @@ class CompanyProjectController extends BaseController
         if($validator->fails()) return return_rest('0','',$validator->messages()->first('logo') ? $validator->messages()->first('logo') : $validator->messages()->first('id'));
         //TODO 获取手机号码
         $project = $this->project->find($this->request->get('id'));
-        $fileName = md5(uniqid(str_random(10)));
-        $file = 'uploads/project/logo/'.$fileName.'.jpg';
+        $file = $this->request->file('logo');
+        $fileName = md5(uniqid(str_random(10))).$file->getClientOriginalExtension();
         try {
-            \Image::make($this->request->file('logo'))->save($file);
+            $file->move(storage_path('uploads/projectLogo'), $fileName);
+            //将图片上传至七牛
+            $imgUrl = $this->qiniuUpload($fileName,'uploads/projectLogo');
             //添加进入数据库
-            $project->logo = $file;
+            $project->logo = $imgUrl;
             $project->save();
             return return_rest('1',compact('file'),'logo上传成功');
         }catch (\Exception $e){
@@ -264,12 +266,14 @@ class CompanyProjectController extends BaseController
         if($validator->fails()) return return_rest('0','',$validator->messages()->first('logo') ? $validator->messages()->first('logo') : $validator->messages()->first('id'));
         //TODO 获取手机号码
         $project = $this->project->find($this->request->get('id'));
-        $fileName = md5(uniqid(str_random(10)));
-        $file = 'uploads/project/logo/'.$fileName.'.jpg';
+        $file = $this->request->file('logo');
+        $fileName = md5(uniqid(str_random(10))).$file->getClientOriginalExtension();
         try {
-            \Image::make($this->request->file('logo'))->save($file);
+            $file->move(storage_path('uploads/projectLogo'), $fileName);
+            //将图片上传至七牛
+            $imgUrl = $this->qiniuUpload($fileName,'uploads/projectLogo');
             //添加进入数据库
-            $project->logo = $file;
+            $project->logo = $imgUrl;
             $project->save();
             return return_rest('1',compact('file'),'logo上传成功');
         }catch (\Exception $e){
