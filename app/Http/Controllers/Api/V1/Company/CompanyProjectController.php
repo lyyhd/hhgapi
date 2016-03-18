@@ -231,7 +231,7 @@ class CompanyProjectController extends BaseController
         //TODO 获取手机号码
         $project = $this->project->find($this->request->get('id'));
         $file = $this->request->file('logo');
-        $fileName = md5(uniqid(str_random(10))).$file->getClientOriginalExtension();
+        $fileName = md5(uniqid(str_random(10))).'.'.$file->getClientOriginalExtension();
         try {
             $file->move(storage_path('uploads/projectLogo'), $fileName);
             //将图片上传至七牛
@@ -267,7 +267,7 @@ class CompanyProjectController extends BaseController
         //TODO 获取手机号码
         $project = $this->project->find($this->request->get('id'));
         $file = $this->request->file('logo');
-        $fileName = md5(uniqid(str_random(10))).$file->getClientOriginalExtension();
+        $fileName = md5(uniqid(str_random(10))).'.'.$file->getClientOriginalExtension();
         try {
             $file->move(storage_path('uploads/projectLogo'), $fileName);
             //将图片上传至七牛
