@@ -28,6 +28,7 @@ class CompanyProjectController extends BaseController
     protected $request,$project;
     public function __construct(Request $request,CompanyProject $project)
     {
+        parent::__construct($request);
         $this->request = $request;
         $this->project = $project;
     }
