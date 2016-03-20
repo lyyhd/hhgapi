@@ -47,7 +47,7 @@ class ArticleController extends BaseController
         }
         //获取文章列表
         if($type = $this->request->get('type')){
-            $article = $this->article->where('type_id',$type)->byStatus()->paginate();
+            $article = $this->article->where('type_id',$type)->orderBy('created_at','desc')->byStatus()->paginate();
             return return_rest('1',compact('article'),'获取文章列表');
         }
         $article = $this->article->orderBy('created_at','desc')->byStatus()->paginate(15);
