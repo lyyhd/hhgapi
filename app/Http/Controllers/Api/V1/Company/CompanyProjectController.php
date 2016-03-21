@@ -19,6 +19,7 @@ use App\Models\Company\CompanyProjectDynamic;
 use App\Models\Company\CompanyProjectField;
 use App\Models\Company\CompanyProjectFieldConfig;
 use App\Models\Customer;
+use App\Models\Invest\InvestRoundConfig;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -173,6 +174,14 @@ class CompanyProjectController extends BaseController
     {
         $field = CompanyProjectFieldConfig::select('id','name')->where('parent_id',0)->get()->toArray();
         return return_rest('1',compact('field'),'项目领域列表');
+    }
+    /**
+     * 获取投资轮次列表
+     */
+    public function round()
+    {
+        $round = InvestRoundConfig::select('id','name')->get()->toArray();
+        return return_rest('1',compact('round'),'项目投资轮次列表');
     }
     /**
      * 更新项目领域

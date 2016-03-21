@@ -6,6 +6,8 @@
  * Time: 下午2:32
  */
 
+//获取投资人列表
+$api->get('customer/investor','CustomerController@investor')->name('customer.investor');
 // 需要jwt验证后才能使用的API
 $api->group(['middleware' => 'jwt.auth'], function ($api) {
     //获取我的工作经历

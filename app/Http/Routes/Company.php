@@ -47,6 +47,8 @@ $api->get('company/project','CompanyProjectController@index')->name('company.pro
 $api->get('company/project/detail','CompanyProjectController@show')->name('company.project.detail');
 //获取项目领域列表
 $api->get('company/project/field','CompanyProjectController@field')->name('company.project.field');
+//获取项目投资轮次列表
+$api->get('company/project/round','CompanyProjectController@round')->name('company.project.round');
 //项目访问量+1
 $api->get('company/project/view','CompanyProjectController@viewPlus')->name('company.project.view');
 // 需要jwt验证后才能使用的API

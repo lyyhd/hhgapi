@@ -24,7 +24,7 @@ class CustomerController extends BaseController
     public function __construct(Request $request,Customer $modelCustomer)
     {
         parent::__construct($request);
-        $this->modelCustomer = $modelCustomer;
+        $this->modelCustomer =  $modelCustomer;
     }
 
     /**
@@ -322,6 +322,29 @@ class CustomerController extends BaseController
         $experience = CompanyExperience::where('customer_id',$this->user()->id)->withOnly('company',array('id','logo','name','brief'))->get()->toArray();
 
         return return_rest('1',compact('experience'),'我的创业经历');
+    }
+    /**
+     * 获取投资人列表
+     * 投资人type
+     */
+    public function investor()
+    {
+
+        $investor = $this->modelCustomer->where('type','2')->with('invest_experience')->paginate();
+        if(is_null($investor)) return return_rest('1','','当前无投资人');
+        $investor = $investor->toArray();
+        $i = 0;
+        foreach($investor['data'] as $item){
+            $investor['data'][$i]['round'] = array();
+            if(!is_null($item['invest_experience'])){
+                foreach($item['invest_experience'] as $experience){
+                    $investor['data'][$i]['round'][$experience['round']['id']] = $experience['round']['name'];
+                }
+            }
+            $i++;
+        }
+        //获取投资人投资记录
+        return return_rest('1',compact('investor'),'投资人列表');
     }
 
 }
