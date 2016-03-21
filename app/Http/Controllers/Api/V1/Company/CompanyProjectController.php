@@ -40,8 +40,34 @@ class CompanyProjectController extends BaseController
         if($this->request->has('per_page')){
             $per_page = $this->request->get('per_page');
         }
-        $project = $this->project->select('id','name','logo','finance_progress','brief','subscribe_amount')->with('field')->paginate($per_page)->toArray();
-
+        $query = $this->project->select('id','name','logo','finance_progress','brief','subscribe_amount');
+        //获取搜索条件
+        if($this->request->has('field')){
+            $query->whereHas('field', function($q)
+            {
+                $field_id = $this->request->get('field');
+                $q->where('field_id',$field_id);
+            });
+        }
+        if($this->request->has('finance')){
+            $query->whereHas('finance', function($q)
+            {
+                $finance_id = $this->request->get('finance');
+                $q->where('finance_id',$finance_id);
+            });
+        }
+        //获取项目投资轮次
+        $project = $query
+            ->with('field')
+            ->with('finance')
+            ->paginate($per_page)
+            ->toArray();
+        $i = 0;
+        foreach($project['data'] as $item)
+        {
+            $project['data'][$i]['finance']['name'] = $this->financeName($item['finance']['id']);
+            $i++;
+        }
         return return_rest('1',compact('project'),'项目列表');
     }
     /**

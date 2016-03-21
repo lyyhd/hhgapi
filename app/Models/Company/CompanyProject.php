@@ -37,5 +37,10 @@ class CompanyProject extends BaseModel
         //return
     }
     //公司信息
+    //投资轮次
+    public function finance()
+    {
+        return $this->hasOne('App\Models\Company\CompanyProjectFinance','project_id')->select('id','project_id','finance_id');
+    }
 
 }
