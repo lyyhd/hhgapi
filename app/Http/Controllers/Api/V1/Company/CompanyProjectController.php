@@ -65,7 +65,7 @@ class CompanyProjectController extends BaseController
         $i = 0;
         foreach($project['data'] as $item)
         {
-            $project['data'][$i]['finance']['name'] = $this->financeName($item['finance']['id']);
+            $project['data'][$i]['finance']['name'] = $this->financeName($item['finance']['finance_id']);
             $i++;
         }
         return return_rest('1',compact('project'),'项目列表');
