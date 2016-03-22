@@ -58,7 +58,7 @@ class InvestExperienceController extends BaseController
         $investExperience->invest_year = $this->request->get('invest_year');
         $investExperience->invest_mouth = $this->request->get('invest_mouth');
         $investExperience->save();
-        return return_rest(1,'','添加成功');
+        return return_rest('1','','添加成功');
     }
 
     /**

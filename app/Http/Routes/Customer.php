@@ -14,4 +14,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->get('customer/employment/experience','CustomerController@employmentExperience')->name('customer.employment.experience');
     //获取我的创业经历
     $api->get('customer/company/experience','CustomerController@companyExperience')->name('customer.company.experience');
+    //自增创业经历
+    $api->post('customer/employment','CustomerController@employment')->name('customer.employment.create');
 });

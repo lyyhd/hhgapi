@@ -351,4 +351,23 @@ class CustomerController extends BaseController
         //获取投资人投资记录
         return return_rest('1',compact('investor'),'投资人列表');
     }
+    /**
+     * 添加新的工作经历
+     */
+    public function employment()
+    {
+        $customer = $this->user();
+        $employmentExperience = new Customer\EmployExperience();
+        $employmentExperience->customer_id = $customer->id;
+        $employmentExperience->company_id = $this->request->get('company_id');
+//        $employmentExperience->company_name = $this->request->get('company_name');
+        $employmentExperience->group_type = $this->request->get('group_type');
+        $employmentExperience->position_id = $this->request->get('position_id');
+        $employmentExperience->position_detail = $this->request->get('position_detail');
+        $employmentExperience->startYear = $this->request->get('startYear');
+        $employmentExperience->startMouth = $this->request->get('startMouth');
+        $employmentExperience->is_today = $this->request->get('is_today');
+        $employmentExperience->save();
+        return return_rest('1','','添加成功');
+    }
 }
