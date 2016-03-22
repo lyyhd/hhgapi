@@ -43,6 +43,6 @@ class Customer extends BaseModel implements AuthenticatableContract
     //获取投资经历
     public function invest_experience()
     {
-        return $this->hasMany('App\Models\Invest\InvestExperience')->with('round')->orderBy('created_at','desc');
+        return $this->hasMany('App\Models\Invest\InvestExperience')->with('round','company')->orderBy('created_at','desc');
     }
 }

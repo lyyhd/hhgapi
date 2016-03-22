@@ -334,6 +334,9 @@ class CustomerController extends BaseController
         if(is_null($investor)) return return_rest('1','','当前无投资人');
         $investor = $investor->toArray();
         $i = 0;
+        //整合投资项目
+
+        //整合投资轮次
         foreach($investor['data'] as $item){
             $investor['data'][$i]['round'] = array();
             if(!is_null($item['invest_experience'])){
@@ -341,10 +344,11 @@ class CustomerController extends BaseController
                     $investor['data'][$i]['round'][$experience['round']['id']] = $experience['round']['name'];
                 }
             }
+            //对投资轮次进行排序
+            ksort($investor['data'][$i]['round']);
             $i++;
         }
         //获取投资人投资记录
         return return_rest('1',compact('investor'),'投资人列表');
     }
-
 }

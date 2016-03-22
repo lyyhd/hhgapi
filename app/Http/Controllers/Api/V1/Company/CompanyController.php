@@ -20,6 +20,7 @@ use App\Models\Company\CompanyIntroduce;
 use App\Models\Customer;
 use App\Transformer\CompanyTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CompanyController extends BaseController
 {
@@ -200,5 +201,11 @@ class CompanyController extends BaseController
         //对访问量进行+1
         $this->company->find($id)->increment('view');
         return return_rest('1','','成功增加');
+    }
+    //获取职位列表
+    public function position()
+    {
+        $position = DB::table('company_position')->select('id','name')->get();
+        return return_rest('1',compact('position'),'职位列表');
     }
 }

@@ -46,15 +46,19 @@ class CompanyProjectController extends BaseController
         if($this->request->has('field')){
             $query->whereHas('field', function($q)
             {
-                $field_id = explode(',',$this->request->get('field'));
-                $q->whereIn('field_id',$field_id);
+                if(!$this->request->get('field') == "\"\""){
+                    $field_id = explode(',',$this->request->get('field'));
+                    $q->whereIn('field_id',$field_id);
+                }
             });
         }
         if($this->request->has('finance')){
             $query->whereHas('finance', function($q)
             {
-                $finance_id = explode(',',$this->request->get('finance'));
-                $q->whereIn('finance_id',$finance_id);
+                if(!$this->request->get('finance') == "\"\""){
+                    $finance_id = explode(',',$this->request->get('finance'));
+                    $q->whereIn('finance_id',$finance_id);
+                }
             });
         }
         //获取项目投资轮次

@@ -36,6 +36,8 @@ $api->get('company/field/{id}/detail',[
 ]);
 //公司访问量+1
 $api->get('company/view','CompanyController@view')->name('company.view');
+//获取职位列表
+$api->get('company/position','CompanyController@position')->name('company.position');
 
 
 /*
