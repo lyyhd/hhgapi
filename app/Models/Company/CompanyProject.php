@@ -47,5 +47,10 @@ class CompanyProject extends BaseModel
     {
         return $this->belongsToMany('App\Models\Customer','invest_project');
     }
+    //获取当前投资轮次
+    public function current_finance()
+    {
+        return $this->hasOne('App\Models\Company\CompanyProjectFinance','project_id')->select('id','project_id','finance_id')->orderBy('created_at','desc');
+    }
 
 }

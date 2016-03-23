@@ -17,6 +17,7 @@ use Goodspb\LaravelEasemob\Facades\Easemob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Customer\CustomerInvestor;
 
 class CustomerController extends BaseController
 {
@@ -369,5 +370,19 @@ class CustomerController extends BaseController
         $employmentExperience->is_today = $this->request->get('is_today');
         $employmentExperience->save();
         return return_rest('1','','添加成功');
+    }
+    /**
+     * 更新投资人信息
+     *
+     */
+    public function updateInvestor()
+    {
+        //获取用户信息
+        $investor = CustomerInvestor::where('customer_id',$this->user()->id)->first();
+        $investor->fill($this->request->input());
+        if($investor->save()){
+            return return_rest('1','','更新成功');
+        }
+        return return_rest('0','','更新失败');
     }
 }
