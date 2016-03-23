@@ -24,7 +24,7 @@ use App\Models\Invest\InvestRoundConfig;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Customer\CustomerProject;
 class CompanyProjectController extends BaseController
 {
     protected $request,$project;
@@ -429,14 +429,14 @@ class CompanyProjectController extends BaseController
             return return_rest('0','',$e->getMessage());
         }
         //判断用户是否收藏该活动
-        $collect = Customer\CustomerProject::where('project_id',$project->id)->where('customer_id',$this->user()->id)->get();
+        $collect = CustomerProject::where('project_id',$project->id)->where('customer_id',$this->user()->id)->first();
         //判断操作类型 1收藏 0取消收藏
         $action = $this->request->get('collect');
         if($action == '1'){
             if(count($collect) >= 1){
                 return return_rest('1','', '用户已收藏该活动');
             }
-            $collect = new Customer\CustomerProject();
+            $collect = new CustomerProject();
             $collect->customer_id = $this->user()->id;
             $collect->project_id = $id;
             if($collect->save()){

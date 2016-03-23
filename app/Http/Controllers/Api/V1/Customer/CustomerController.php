@@ -11,6 +11,7 @@ use \App\Http\Controllers\Api\BaseController;
 use App\Jobs\ChangeName;
 use App\Models\Company\Company;
 use App\Models\Company\CompanyExperience;
+use App\Models\Company\CompanyProjectFieldConfig;
 use App\Models\Customer;
 use App\Transformer\CustomerTransformer;
 use Goodspb\LaravelEasemob\Facades\Easemob;
@@ -384,5 +385,31 @@ class CustomerController extends BaseController
             return return_rest('1','','更新成功');
         }
         return return_rest('0','','更新失败');
+    }
+    /**
+     * 更新用户投资领域
+     */
+    public function updateInvestorField()
+    {
+        //删除原有投资领域
+        Customer\CustomerInvestField::where('customer_id',$this->user()->id)->delete();
+        //获取新的领域
+        $field_id = json_decode($this->request->get('field'));
+        foreach($field_id as $item)
+        {
+            $invest_field = new Customer\CustomerInvestField;
+            $invest_field->customer_id = $this->user()->id;
+            $invest_field->invest_field_id = $item;
+            $invest_field->invest_field_name = $this->fieldName($item);
+            $invest_field->save();
+        }
+        return return_rest('1','','更新成功');
+    }
+    /**
+     * 获取投资领域名称
+     */
+    public function fieldName($id)
+    {
+        return CompanyProjectFieldConfig::find($id)->name;
     }
 }

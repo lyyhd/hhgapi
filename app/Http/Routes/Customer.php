@@ -18,4 +18,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->post('customer/employment','CustomerController@employment')->name('customer.employment.create');
     //更新投资人信息
     $api->put('customer/investor','CustomerController@updateInvestor')->name('customer.investor.update');
+    //更新投资领域
+    $api->put('customer/investor/field','CustomerController@updateInvestorField')->name('customer.investor.update.field');
 });
