@@ -45,4 +45,9 @@ class Customer extends BaseModel implements AuthenticatableContract
     {
         return $this->hasMany('App\Models\Invest\InvestExperience')->with('round','company')->orderBy('created_at','desc');
     }
+    //获取用户投资的项目
+    public function invest_project()
+    {
+        return $this->belongsToMany('App\Models\Company\CompanyProject','invest_project','customer_id','project_id');
+    }
 }

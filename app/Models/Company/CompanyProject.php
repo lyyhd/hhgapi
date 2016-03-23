@@ -42,5 +42,10 @@ class CompanyProject extends BaseModel
     {
         return $this->hasOne('App\Models\Company\CompanyProjectFinance','project_id')->select('id','project_id','finance_id');
     }
+    //获取投资人
+    public function investor()
+    {
+        return $this->belongsToMany('App\Models\Customer','invest_project');
+    }
 
 }

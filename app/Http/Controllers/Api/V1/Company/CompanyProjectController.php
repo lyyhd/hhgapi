@@ -19,6 +19,7 @@ use App\Models\Company\CompanyProjectDynamic;
 use App\Models\Company\CompanyProjectField;
 use App\Models\Company\CompanyProjectFieldConfig;
 use App\Models\Customer;
+use App\Models\Invest\InvestProject;
 use App\Models\Invest\InvestRoundConfig;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -134,6 +135,15 @@ class CompanyProjectController extends BaseController
     public function mine()
     {
         $user = $this->user();
+        //获取用户类型 是否为投资人
+        if($user->type == '2'){
+            //该用户为投资人 获取用户投资列表
+            $invest_project = InvestProject::select('project_id')->where('customer_id',$user->id)->get()->toArray();
+            if(empty($invest_project)) return return_rest('0','','暂无投资项目');
+            $project_id = array_pluck($invest_project,'project_id');
+            $project = CompanyProject::select('id','name','brief','logo')->whereIn('id',$project_id)->with('field')->get()->toArray();
+            return return_rest('1',compact('project'),'项目列表');
+        }
         if($user->company_id == 0){
             $project['is_company'] = '0';
             return return_rest('1',compact('project'),'项目详情');
