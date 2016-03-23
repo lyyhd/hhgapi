@@ -141,7 +141,17 @@ class CompanyProjectController extends BaseController
             $invest_project = InvestProject::select('project_id')->where('customer_id',$user->id)->get()->toArray();
             if(empty($invest_project)) return return_rest('0','','暂无投资项目');
             $project_id = array_pluck($invest_project,'project_id');
-            $project = CompanyProject::select('id','name','brief','logo')->whereIn('id',$project_id)->with('field','current_finance')->get()->toArray();
+            $project = CompanyProject::select('id','name','brief','logo')->whereIn('id',$project_id)->with('field')->get()->toArray();
+            $i = 0;
+            foreach($project as $item){
+                //获取项目投资轮次
+                $project_finance = DB::table('company_project_finance')
+                    ->where('project_id',$item['id'])
+                    ->orderBy('created_at','desc')
+                    ->first();
+                $project[$i]['project_finance'] = $this->financeName($project_finance->finance_id);
+                $i++;
+            }
             return return_rest('1',compact('project'),'项目列表');
         }
         if($user->company_id == 0){
