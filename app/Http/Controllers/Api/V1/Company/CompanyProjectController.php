@@ -395,4 +395,63 @@ class CompanyProjectController extends BaseController
         $this->project->find($id)->increment('view');
         return return_rest('1','','成功增加');
     }
+    /**
+     * 检查当前用户是否收藏项目
+     */
+    public function checkCollect()
+    {
+        $id = $this->request->get('id');
+        //判断活动是否存在并获取活动id
+        try{
+            $project = $this->project->findOrFail($id);
+        }catch (\Exception $e){
+            if($e->getMessage() === 'No query results for model [App\Models\Company\CompanyProject].') return return_rest('0','','该项目不存在');
+            return return_rest('0','',$e->getMessage());
+        }
+        //判断用户是否关注该活动
+        $collect = Customer\CustomerProject::where('project_id',$project->id)->where('customer_id',$this->user()->id)->get();
+        if(count($collect) >= 1){
+            return return_rest('1',array('collect' => '1'), '用户已收藏该项目');
+        }
+        return return_rest('1',array('collect' => '0'), '用户未收藏该项目');
+    }
+    /**
+     * 用户进行收藏 取消收藏操作
+     */
+    public function doCollect()
+    {
+        $id = $this->request->get('id');
+        //判断活动是否存在并获取活动id
+        try{
+            $project = $this->project->findOrFail($id);
+        }catch (\Exception $e){
+            if($e->getMessage() === 'No query results for model [App\Models\Company\CompanyProject].') return return_rest('0','','该项目不存在');
+            return return_rest('0','',$e->getMessage());
+        }
+        //判断用户是否收藏该活动
+        $collect = Customer\CustomerProject::where('project_id',$project->id)->where('customer_id',$this->user()->id)->get();
+        //判断操作类型 1收藏 0取消收藏
+        $action = $this->request->get('collect');
+        if($action == '1'){
+            if(count($collect) >= 1){
+                return return_rest('1','', '用户已收藏该活动');
+            }
+            $collect = new Customer\CustomerProject();
+            $collect->customer_id = $this->user()->id;
+            $collect->project_id = $id;
+            if($collect->save()){
+                return return_rest('1','', '收藏成功');
+            }
+            return return_rest('0','', '收藏失败');
+        }
+        if($action == '0'){
+            if(count($collect) == 0){
+                return return_rest('0','', '用户未收藏该项目');
+            }
+            if($collect->delete()){
+                return return_rest('1','', '取消收藏成功');
+            }
+            return return_rest('0','', '取消收藏失败');
+        }
+    }
 }

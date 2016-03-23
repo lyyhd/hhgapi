@@ -71,4 +71,8 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->put('company/project/field','CompanyProjectController@updateField')->name('company.project.field.update');
     //更新团队介绍 团队优势
     $api->put('company/project/team','CompanyProjectController@updateTeam')->name('company.team');
+    //检查用户是否收藏项目
+    $api->get('company/project/collect', ['as' => 'company.project.getCollect', 'uses' => 'CompanyProjectController@checkCollect']);
+    //收藏项目
+    $api->post('company/project/collect', ['as' => 'company.project.postCollect', 'uses' => 'CompanyProjectController@doCollect']);
 });
