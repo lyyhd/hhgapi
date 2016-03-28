@@ -314,4 +314,27 @@ class ActivityController extends BaseController
         }
         return return_rest('0','','该用户不存在');
     }
+    /**
+     * 获取用户报名活动列表
+     */
+    public function applyList()
+    {
+        $per_page = 15;
+        if($this->request->has('per_page')){
+            $per_page = $this->request->get('per_page');
+        }
+        //获取活动id
+        $applies = DB::table('activity_customer_apply')->select('activity_id')->where('customer_id',$this->user()->id)->orderBy('created_at','desc')->get();
+        $aid = array();
+        foreach($applies as $apply){
+            $aid[] = $apply->activity_id;
+        }
+        //获取活动
+        $applyList = $this->activity->select('id','image','brief','title','created_at','begin_at','end_at')->whereIn('id',$aid)->paginate($per_page);
+        $applyList = $applyList->toArray();
+        if($applyList){
+            return return_rest('1',compact('applyList'),'获取列表成功');
+        }
+        return return_rest('1',"",'用户暂未关注活动');
+    }
 }

@@ -28,5 +28,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->get('activity/apply','ActivityController@checkApply')->name('activity.checkApply');
     //活动报名
     $api->post('activity/apply','ActivityController@apply')->name('activity.apply');
-
+    //获取用户报名列表
+    $api->get('activity/applyList','ActivityController@applyList')->name('activity.applyList');
 });
