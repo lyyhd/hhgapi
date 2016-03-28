@@ -454,4 +454,27 @@ class CompanyProjectController extends BaseController
             return return_rest('0','', '取消收藏失败');
         }
     }
+    /**
+     * 获取投资人用户收藏项目
+     */
+    public function loveList()
+    {
+        $per_page = 15;
+        if($this->request->has('per_page')){
+            $per_page = $this->request->get('per_page');
+        }
+        //获取活动id
+        $projects = CustomerProject::select('project_id')->where('customer_id',$this->user()->id)->orderBy('created_at','desc')->get();
+        $pid = array();
+        foreach($projects as $project){
+            $pid[] = $project->project_id;
+        }
+        //获取活动
+        $loveList = $this->project->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','subscribe_amount','currency','city','view','share')->whereIn('id',$pid)->paginate($per_page);
+        $loveList = $loveList->toArray();
+        if($loveList){
+            return return_rest('1',compact('loveList'),'获取列表成功');
+        }
+        return return_rest('1',"",'用户暂未关注活动');
+    }
 }

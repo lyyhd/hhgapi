@@ -48,12 +48,12 @@ class ActivityController extends BaseController
         }
         if($take = $this->request->get('take')){
             //获取活动列表
-            $activity = $this->activity->select('id','image','brief','title','begin_at','created_at')->take($take)->orderBy('created_at','desc')->get()->toArray();
+            $activity = $this->activity->select('id','image','brief','title','begin_at','created_at')->take($take)->orderBy('id','desc')->get()->toArray();
 
             return return_rest('1',compact('activity'),'获取列表成功');
         }
         //获取活动列表
-        $activity = $this->activity->select('id','image','brief','title','begin_at','created_at')->orderBy('created_at','desc')->paginate($per_page)->toArray();
+        $activity = $this->activity->select('id','image','brief','title','begin_at','created_at')->orderBy('id','desc')->paginate($per_page)->toArray();
 
         return return_rest('1',compact('activity'),'获取列表成功');
     }

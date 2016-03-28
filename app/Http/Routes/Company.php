@@ -75,4 +75,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->get('company/project/collect', ['as' => 'company.project.getCollect', 'uses' => 'CompanyProjectController@checkCollect']);
     //收藏项目
     $api->post('company/project/collect', ['as' => 'company.project.postCollect', 'uses' => 'CompanyProjectController@doCollect']);
+    //获取投资人收藏项目
+    $api->get('company/project/loveList', 'CompanyProjectController@loveList')->name('company.project.loveList');
 });
