@@ -71,7 +71,7 @@ class CompanyProjectController extends BaseController
         $i = 0;
         foreach($project['data'] as $item)
         {
-            $project['data'][$i]['finance']['name'] = '未设置';
+            $project['data'][$i]['finance']['name'] = '天使轮';
             if(!is_null($item['finance']['finance_id'])){
                 $project['data'][$i]['finance']['name'] = $this->financeName($item['finance']['finance_id']);
             }
@@ -129,7 +129,7 @@ class CompanyProjectController extends BaseController
             ->where('project_id',$project['id'])
             ->orderBy('created_at','desc')
             ->first();
-        $finance_name = '未设置';
+        $finance_name = '天使轮';
         if($project_finance){
             $finance_name = $this->financeName($project_finance->finance_id);
         }
@@ -194,9 +194,9 @@ class CompanyProjectController extends BaseController
             ->where('project_id',$project['id'])
             ->orderBy('created_at','desc')
             ->first();
-        $finance_name = '未设置';
+        $project['finance_name'] = '天使轮';
         if($project_finance){
-            $finance_name = $this->financeName($project_finance->finance_id);
+            $project['finance_name'] = $this->financeName($project_finance->finance_id);
         }
         return return_rest('1',compact('project'),'项目详情');
     }
