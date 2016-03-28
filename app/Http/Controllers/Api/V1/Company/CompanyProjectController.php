@@ -129,11 +129,11 @@ class CompanyProjectController extends BaseController
             ->where('project_id',$project['id'])
             ->orderBy('created_at','desc')
             ->first();
-        $project['finance_name'] = '天使轮';
+        $project['project_finance'] = '天使轮';
         if($project_finance){
-            $project['finance_name'] = $this->financeName($project_finance->finance_id);
+            $project['project_finance'] = $this->financeName($project_finance->finance_id);
         }
-        $project['project_finance'] = $finance_name;
+        $project['project_finance'] = $project_finance;
         return return_rest('1',compact('project'),'项目详情');
     }
     /**
