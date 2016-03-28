@@ -133,7 +133,7 @@ class CompanyProjectController extends BaseController
         if($project_finance){
             $project['project_finance'] = $this->financeName($project_finance->finance_id);
         }
-        $project['project_finance'] = $project_finance;
+        $project['project_finance'] = $project['project_finance'];
         return return_rest('1',compact('project'),'项目详情');
     }
     /**
