@@ -65,7 +65,7 @@ class ActivityController extends BaseController
     {
         $id = $this->request->get('id');
         try{
-            $activity = $this->activity->select('id','title','image','content','begin_at','end_at','address')->findOrFail($id)->toArray();
+            $activity = $this->activity->select('id','title','image','content','begin_at','end_at','address','bigimage')->findOrFail($id)->toArray();
         }catch (\Exception $e){
             if($e->getMessage() === 'No query results for model [App\Models\Activity\Activity].') return return_rest('0','','该活动不存在');
             return return_rest('0','',$e->getMessage());
