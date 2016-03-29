@@ -299,7 +299,7 @@ class ActivityController extends BaseController
         $apply->customer_id = $customer_id;
         $apply->activity_id = $activity_id;
         if($apply->save()){
-            return return_rest('1','','报名成功');
+            return return_rest('1',compact('apply'),'报名成功');
         }
         return return_rest('0','','报名失败');
     }

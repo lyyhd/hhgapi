@@ -146,7 +146,7 @@ class CompanyProjectController extends BaseController
         if($user->type == '2'){
             //该用户为投资人 获取用户投资列表
             $invest_project = InvestProject::select('project_id')->where('customer_id',$user->id)->get()->toArray();
-            if(empty($invest_project)) return return_rest('0','','暂无投资项目');
+            if(empty($invest_project)) return return_rest('0',array('project'=>array()),'暂无投资项目');
             $project_id = array_pluck($invest_project,'project_id');
             $project = CompanyProject::select('id','name','brief','logo')->whereIn('id',$project_id)->with('field')->get()->toArray();
             $i = 0;
@@ -156,7 +156,10 @@ class CompanyProjectController extends BaseController
                     ->where('project_id',$item['id'])
                     ->orderBy('created_at','desc')
                     ->first();
-                $project[$i]['project_finance'] = $this->financeName($project_finance->finance_id);
+                $project[$i]['project_finance'] = '天使轮';
+                if($project_finance){
+                    $project[$i]['project_finance'] = $this->financeName($project_finance->finance_id);
+                }
                 $i++;
             }
             return return_rest('1',compact('project'),'项目列表');
