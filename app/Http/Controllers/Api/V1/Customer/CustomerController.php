@@ -66,7 +66,7 @@ class CustomerController extends BaseController
                 $user['invest'] = '';
             }
             //获取投资人公司
-            $user['company'] = DB::table('invest_company')->select('id','name','website','weixin')->where('id',$user['company_id'])->first();
+            $user['company'] = DB::table('invest_company')->select('id','name','brief','website','weixin')->where('id',$user['company_id'])->first();
         }
         $user['is_company'] = is_null($user['company']) ? '0' : '1';
         $user['company'] = is_null($user['company']) ? "" : $user['company'];
