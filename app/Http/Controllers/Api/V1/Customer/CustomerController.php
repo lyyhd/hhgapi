@@ -53,24 +53,23 @@ class CustomerController extends BaseController
         $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
             ->withOnly('company',array('id','name','website','finance_status','weixin'))
             ->find($this->user()->id);
+        $user = $user->toArray();
         //如果用户为投资人 获取投资人相关字段
-        if($user->type == '2'){
+        if($user['type'] == '2'){
             //获取投资人信息
-            $user['investor'] = DB::table('customer_investor')->where('customer_id',$user->id)->first();
-            $user['invest'] = DB::table('customer_invest_field')->where('customer_id',$user->id)->get();
+            $user['investor'] = DB::table('customer_investor')->where('customer_id',$user['id'])->first();
+            $user['invest'] = DB::table('customer_invest_field')->where('customer_id',$user['id'])->get();
             if(is_null($user['investor'])){
                 $user['investor'] = '';
             }
             if(count($user['invest']) == 0){
                 $user['invest'] = '';
             }
+            //获取投资人公司
+            $user['company'] = DB::table('invest_company')->select('id','name','website','weixin')->where('id',$user['company_id'])->first();
         }
-
-//        return $this->response->item($user, new CustomerTransformer);
-        $user = $user->toArray();
         $user['is_company'] = is_null($user['company']) ? '0' : '1';
         $user['company'] = is_null($user['company']) ? "" : $user['company'];
-        $user['time'] = time();
         return return_rest('1',compact('user'),'获取成功');
     }
     /**
@@ -87,6 +86,20 @@ class CustomerController extends BaseController
             return return_rest('0','','该用户不存在');
         }
         $user = $user->toArray();
+        //如果用户为投资人 获取投资人相关字段
+        if($user['type'] == '2'){
+            //获取投资人信息
+            $user['investor'] = DB::table('customer_investor')->where('customer_id',$user['id'])->first();
+            $user['invest'] = DB::table('customer_invest_field')->where('customer_id',$user['id'])->get();
+            if(is_null($user['investor'])){
+                $user['investor'] = '';
+            }
+            if(count($user['invest']) == 0){
+                $user['invest'] = '';
+            }
+            //获取投资人公司
+            $user['company'] = DB::table('invest_company')->select('id','name','website','weixin')->where('id',$user['company_id'])->first();
+        }
         if(is_null($user['company'])){
             $user['is_company'] = '0';
         }else{
