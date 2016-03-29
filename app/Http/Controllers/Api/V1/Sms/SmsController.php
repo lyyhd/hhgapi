@@ -47,7 +47,7 @@ class SmsController extends BaseController
         ]);
         $mobiles = $validator->messages()->get('mobile');
         foreach($mobiles as $mobile){
-            if($mobile == '手机号码已经注册账户') return return_rest('0',array('smsToken'=>array(),'code'=>array()),'手机号码已经注册账户');
+            if($mobile == '手机号码已经注册账户') return return_rest('0',array('smsToken'=>"",'code'=>""),'手机号码已经注册账户');
             if($mobile == '手机号码未提供') return return_rest('0',array('smsToken'=>array(),'code'=>array()),'手机号码未提供');
         }
         //发送验证码短信
