@@ -103,13 +103,13 @@ class ActivityController extends BaseController
             $per_page = $this->request->get('per_page');
         }
         //获取活动id
-        $activities = DB::table('activity_customer_attention')->select('activity_id')->where('customer_id',$this->user()->id)->orderBy('created_at','desc')->get();
+        $activities = DB::table('activity_customer_attention')->select('activity_id')->where('customer_id',$this->user()->id)->orderBy('id','desc')->get();
         $aid = array();
         foreach($activities as $activity){
             $aid[] = $activity->activity_id;
         }
         //获取活动
-        $attentionList = $this->activity->select('id','image','brief','title','created_at','begin_at','end_at')->whereIn('id',$aid)->paginate($per_page);
+        $attentionList = $this->activity->select('id','image','brief','title','created_at','begin_at','end_at')->whereIn('id',$aid)->orderBy('id','desc')->paginate($per_page);
         $attentionList = $attentionList->toArray();
         if($attentionList){
             return return_rest('1',compact('attentionList'),'获取列表成功');
