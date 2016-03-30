@@ -324,13 +324,13 @@ class ActivityController extends BaseController
             $per_page = $this->request->get('per_page');
         }
         //获取活动id
-        $applies = DB::table('activity_customer_apply')->select('activity_id')->where('customer_id',$this->user()->id)->orderBy('created_at','desc')->get();
+        $applies = DB::table('activity_customer_apply')->select('activity_id')->where('customer_id',$this->user()->id)->orderBy('id','desc')->get();
         $aid = array();
         foreach($applies as $apply){
             $aid[] = $apply->activity_id;
         }
         //获取活动
-        $applyList = $this->activity->select('id','image','brief','title','created_at','begin_at','end_at')->whereIn('id',$aid)->paginate($per_page);
+        $applyList = $this->activity->select('id','image','brief','title','created_at','begin_at','end_at')->whereIn('id',$aid)->orderBy('id','desc')->paginate($per_page);
         $applyList = $applyList->toArray();
         if($applyList){
             return return_rest('1',compact('applyList'),'获取列表成功');
