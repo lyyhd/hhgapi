@@ -73,12 +73,8 @@ class ArticleController extends BaseController
     public function addShare()
     {
         $id = $this->request->get('id');
-        //获取当前文章分享数\
-        $article = $this->article->find($id);
-        $count = $this->request->get('count');
-        if($article->share > $count) $count = $article->share;
-        $article->share = $count + 1;
-        $article->save();
+        //获取当前文章分享数
+        $this->article->find($id)->increment('share');
         return return_rest('1','','文章分享量+1');
     }
     /**
