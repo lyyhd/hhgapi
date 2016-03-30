@@ -12,11 +12,12 @@ $api->get('article',['as' => 'article.index','uses' => 'ArticleController@index'
 $api->get('article/detail',['as' => 'article.detail','uses' => 'ArticleController@detail']);
 //阅读量增加
 $api->get('article/view','ArticleController@addView')->name('article.addView');
+//文章分享数增加
+$api->post('article/share','ArticleController@addShare')->name('article.addShare');
 //获取文章类型列表
 $api->get('article/types','ArticleController@articleType')->name('article.types');
 //获取评论列表
 $api->get('article/comment','ArticleController@comment')->name('article.getComment');
-
 //需要登录进行的操作
 $api->group(['middleware' => 'jwt.auth'],function($api){
     //评论时 检测用户是否被禁言

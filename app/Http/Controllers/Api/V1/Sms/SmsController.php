@@ -97,6 +97,33 @@ class SmsController extends BaseController
 
         return return_rest('1',$result);
     }
+    /**
+     * 更换手机发送验证码
+     */
+    public function changeMobile()
+    {
+        $validator = Validator::make($this->request->all(),[
+            'mobile'        => 'required|exists:customers',
+        ],[
+            'mobile.exists' => '手机号码未注册账户',
+            'mobile.required' => '请输入手机号码',
+        ]);
+        //验证传入字段是否存在错误
+        if($validator->messages()->has('mobile')){
+            if($validator->messages()->get('mobile')[0] === '手机号码未注册账户' ) return return_rest('0','','手机号码未注册');
+        }
+        //发送验证码短信
+        $verfiy_code        = (string)$this->generate_code(4);
+        //设置短信模板id
+        $tem_id             = '22890';
+        //设置短信过期时间
+        $deadline_time      = 60;
+        //TODO模板参数
+        $token = $this->ttpassv2($this->request->get('mobile').'verify',time());
+        $result =  $this->sendTokenMessage($this->request->get('mobile'),$token,$tem_id,$deadline_time,array($verfiy_code));
+
+        return return_rest('1',$result);
+    }
 
     /**
      * 验证验证码

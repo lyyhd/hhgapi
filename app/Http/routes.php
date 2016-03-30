@@ -72,6 +72,8 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
         'as'        => 'sms.forget',
         'uses'      => 'Sms\SmsController@forget'
     ]);
+    //更换手机号码发送
+    $api->post('sms/changeMobile','Sms\SmsController@forget')->name('sms.changeMobile');
     # Auth
     // 登录
     $api->post('auth/login', [
