@@ -50,7 +50,7 @@ class CustomerController extends BaseController
      */
     public function show()
     {
-        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
+        $user = $this->modelCustomer->select('id','name','user_name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
             ->withOnly('company',array('id','name','website','finance_status','weixin'))
             ->find($this->user()->id);
         $user = $user->toArray();
