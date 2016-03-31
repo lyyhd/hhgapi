@@ -339,21 +339,21 @@ class CustomerController extends BaseController
     public function contract()
     {
         //解析数据
-        $mobileList = $this->request->input('mobilelist');
+        $lists = $this->request->input('list');
 
-        $mobileList = json_decode($mobileList,true);
-        $mobiles = array();
+        $lists = json_decode($lists,true);
+        $names = array();
         try{
-            foreach ($mobileList as $list){
+            foreach ($lists as $list){
                 foreach ($list as $key => $val){
-                    array_push($mobiles,$val);
+                    array_push($names,$val);
                 }
             }
         }catch(\Exception $e){
             return return_rest('0','',$e->getMessage());
         }
 
-        $list = $this->modelCustomer->select('name','mobile')->whereIn('mobile',$mobiles)->get()->toArray();
+        $list = $this->modelCustomer->select('name','mobile','user_name','avatar')->whereIn('user_name',$names)->get()->toArray();
 
         return return_rest('1',compact('list'),'获取列表成功');
     }
