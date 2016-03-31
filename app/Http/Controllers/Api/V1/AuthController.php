@@ -47,7 +47,7 @@ class AuthController extends BaseController
             return return_rest('0',array('token'=>'','customer'=>array('id'=>'','avatar'=>'','type'=>'','nickname'=>'','name'=>'')),'请按照规则输入手机号码');
         }
         //登录成功 获取用户信息
-        $customer = Customer::select('id','type','name','nickname','avatar','user_name')->where('mobile',$this->request->get('mobile'))->first();
+        $customer = Customer::select('id','type','name','nickname','avatar','user_name')->where('user_name',$this->request->get('mobile'))->orWhere('mobile',$this->request->get('mobile'))->first();
         return return_rest('1',compact('token','customer'),'登陆成功');
     }
 
