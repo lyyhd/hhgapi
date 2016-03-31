@@ -115,7 +115,7 @@ class CustomerController extends BaseController
     public function other()
     {
         $account = $this->request->get('account');
-        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
+        $user = $this->modelCustomer->select('id','name','mobile','avatar','user_name','nickname','brief','type','sex','email','address','company_id','position')
             ->withOnly('company',array('id','name','website','finance_status','weixin','email'))
             ->where('user_name',$account)
             ->orWhere('mobile',$account)
