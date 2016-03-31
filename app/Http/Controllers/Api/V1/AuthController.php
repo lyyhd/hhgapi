@@ -77,7 +77,7 @@ class AuthController extends BaseController
     {
         $token = $this->request->get('smsToken');
         $validator = \Validator::make($this->request->all(), [
-            'user_name' => 'required|unique:customers',
+            'user_name' => 'required|between:4,12|unique:customers|Regex:/^[a-z0-9]{4,12}$/',
             'mobile'    => "required|confirm_mobile_not_change:$token",
             'password'     => 'required',
             'verifyCode'    => "required|verify_code:$token|confirm_mobile_rule:mobile_required,$token"
@@ -86,7 +86,9 @@ class AuthController extends BaseController
             'verify_code'   => '验证码错误',
             'confirm_mobile_not_change' => '当前手机号码与发送号码不符',
             'confirm_mobile_rule' => '验证码验证错误',
-            'user_name.unique'  => '用户名已注册'
+            'user_name.unique'  => '用户名已注册',
+            'user_name.regex'  => '用户名必须为小写字母或数字',
+            'user_name.between'  => '用户名必须为4-12位'
         ]);
         $messages = $validator->messages();
         if($messages->has('mobile')){
@@ -109,10 +111,12 @@ class AuthController extends BaseController
         }
         if($messages->has('user_name'))
         {
-            return return_rest('0','','用户名已注册');
+            if($mobile_rule == '用户名已注册') return return_rest('0','','用户名已注册');
+            if($mobile_rule == '用户名必须为小写字母或数字') return return_rest('0','','用户名必须为小写字母或数字');
+            if($mobile_rule == '用户名必须为4-12位') return return_rest('0','','用户名必须为4-12位');
         }
         //增加环信注册 失败返回false
-        $easemob = Easemob::user_register(base64_encode($this->request->get('user_name')),$this->request->get('password'));
+        $easemob = Easemob::user_register($this->request->get('user_name'),$this->request->get('password'));
         //TODO
         if(isset($easemob['mobile'])) return return_rest('0','','该用户已注册环信');
         //设置用户相关信息
