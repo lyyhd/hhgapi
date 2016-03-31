@@ -105,8 +105,8 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     ]);
     //根据用户手机号码获取用户信息
     $api->get('customer/byMobile','Customer\CustomerController@detailByMobile')->name('customer.detailByMobile');
-    //根据用户名获取用户信息
-    $api->get('customer/byUserName','Customer\CustomerController@detailByUserName')->name('customer.detailByUserName');
+    //获取他人信息
+    $api->get('customer/other','Customer\CustomerController@other')->name('customer.other');
 
     // 需要jwt验证后才能使用的API
     $api->group(['middleware' => 'jwt.auth'], function ($api) {
