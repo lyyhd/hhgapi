@@ -463,4 +463,42 @@ class CustomerController extends BaseController
     {
         return CompanyProjectFieldConfig::find($id)->name;
     }
+    /**
+     * 用户更换新的手机号码
+     */
+    public function changeMobile()
+    {
+        //验证短信
+        $token = $this->request->get('smsToken');
+        $validator = \Validator::make($this->request->all(), [
+            'mobile'    => "required|confirm_mobile_not_change:$token",
+            'verifyCode'    => "required|verify_code:$token|confirm_mobile_rule:mobile_required,$token"
+        ], [
+            'verifyCode.required' => '请输入短信验证码',
+            'verify_code'   => '验证码错误',
+            'confirm_mobile_not_change' => '当前手机号码与发送号码不符',
+            'confirm_mobile_rule' => '验证码验证错误',
+        ]);
+        $messages = $validator->messages();
+        if($messages->has('mobile')){
+            $mobiles_rule = $messages->get('mobile');
+            foreach($mobiles_rule as $mobile_rule){
+                if($mobile_rule == '当前手机号码与发送号码不符') return return_rest('0','','当前手机号码与发送号码不符');
+            }
+        }
+        if($messages->has('verifyCode')){
+            $verifyCodes = $messages->get('verifyCode');
+            foreach($verifyCodes as $verifyCode){
+                if($verifyCode == '请输入短信验证码') return return_rest('0','','请输入短信验证码');
+                if($verifyCode == '验证码错误') return return_rest('0','','验证码错误');
+                if($verifyCode == '验证码验证错误') return return_rest('0','','验证码验证错误');
+            }
+        }
+        $customer = $this->user();
+        $customer->mobile = $this->request->get('mobile');
+        if($customer->save()){
+            return return_rest('1','','手机号码更新成功');
+        }
+        return return_rest('0','','手机号码更新失败');
+    }
 }

@@ -74,6 +74,8 @@ $api->version('v1',['namespace' => 'App\Http\Controllers\Api\V1'], function($api
     ]);
     //更换手机号码发送
     $api->post('sms/changeMobile','Sms\SmsController@forget')->name('sms.changeMobile');
+    //验证验证码是否正确
+    $api->post('sms/checkVerify','Sms\SmsController@checkVerify')->name('sms.checkVerify');
     # Auth
     // 登录
     $api->post('auth/login', [

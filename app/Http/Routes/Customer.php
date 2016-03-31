@@ -20,4 +20,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->put('customer/investor','CustomerController@updateInvestor')->name('customer.investor.update');
     //更新投资领域
     $api->put('customer/investor/field','CustomerController@updateInvestorField')->name('customer.investor.update.field');
+    //更新用户手机号码
+    $api->post('customer/changeMobile','CustomerController@changeMobile')->name('customer.changeMobile');
 });
