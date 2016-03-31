@@ -110,14 +110,15 @@ class CustomerController extends BaseController
         return return_rest('1',compact('user'),'获取成功');
     }
     /**
-     * 根据用户名获取用户信息
+     * 获取他人信息
      */
-    public function detailByUserName()
+    public function other()
     {
-        $user_name = $this->request->get('user_name');
+        $account = $this->request->get('account');
         $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
             ->withOnly('company',array('id','name','website','finance_status','weixin','email'))
-            ->where('user_name',$user_name)
+            ->where('user_name',$account)
+            ->orWhere('mobile',$account)
             ->first();
         if(!$user){
             return return_rest('0','','该用户不存在');
