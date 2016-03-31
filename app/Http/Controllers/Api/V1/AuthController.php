@@ -21,7 +21,7 @@ class AuthController extends BaseController
     public function login()
     {
         $validator = \Validator::make($this->request->all(), [
-            'mobile'    => 'required|exists:customers',
+            'mobile'    => 'required',
             'password' => 'required',
         ]);
         $account = $this->request->get('mobile');
