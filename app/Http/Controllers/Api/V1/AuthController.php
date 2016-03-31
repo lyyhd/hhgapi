@@ -24,15 +24,17 @@ class AuthController extends BaseController
             'mobile'    => 'required|exists:customers',
             'password' => 'required',
         ]);
-
-        $credentials = $this->request->only('mobile', 'password');
-
-        if ( ! $token = \JWTAuth::attempt($credentials)) {
+        $account = $this->request->get('mobile');
+        $password = $this->request->get('password');
+        $credentials_mobile = array('mobile' => $account,'password' => $password);
+        $credentials_user_name = array('user_name' => $account, 'password' => $password);
+        $token = \JWTAuth::attempt($credentials_mobile) ? \JWTAuth::attempt($credentials_mobile) : \JWTAuth::attempt($credentials_user_name);
+        if (!$token) {
 //            $validator->after(function ($validator) {
 //                //$validator->errors()->add('error_msg', '用户名或密码错误');
 //                return $this->errorBadRequest(return_rest('0','','用户名或密码错误','10021'));
 //            });
-            return return_rest('0',array('token'=>'','customer'=>array('id'=>'','avatar'=>'','type'=>'','nickname'=>'','name'=>'')),'用户名或密码错误');
+            return return_rest('0',array('token'=>'','customer'=>array('id'=>'','avatar'=>'','type'=>'','nickname'=>'','name'=>'','user_name')),'用户名或密码错误');
         }
 
         if ($validator->fails()) {
@@ -45,7 +47,7 @@ class AuthController extends BaseController
             return return_rest('0',array('token'=>'','customer'=>array('id'=>'','avatar'=>'','type'=>'','nickname'=>'','name'=>'')),'请按照规则输入手机号码');
         }
         //登录成功 获取用户信息
-        $customer = Customer::select('id','type','name','nickname','avatar')->where('mobile',$this->request->get('mobile'))->first();
+        $customer = Customer::select('id','type','name','nickname','avatar','user_name')->where('mobile',$this->request->get('mobile'))->first();
         return return_rest('1',compact('token','customer'),'登陆成功');
     }
 
@@ -75,6 +77,7 @@ class AuthController extends BaseController
     {
         $token = $this->request->get('smsToken');
         $validator = \Validator::make($this->request->all(), [
+            'user_name' => 'required|unique:customers',
             'mobile'    => "required|confirm_mobile_not_change:$token",
             'password'     => 'required',
             'verifyCode'    => "required|verify_code:$token|confirm_mobile_rule:mobile_required,$token"
@@ -82,7 +85,8 @@ class AuthController extends BaseController
             'verifyCode.required' => '请输入短信验证码',
             'verify_code'   => '验证码错误',
             'confirm_mobile_not_change' => '当前手机号码与发送号码不符',
-            'confirm_mobile_rule' => '验证码验证错误'
+            'confirm_mobile_rule' => '验证码验证错误',
+            'user_name.unique'  => '用户名已注册'
         ]);
         $messages = $validator->messages();
         if($messages->has('mobile')){
@@ -103,8 +107,12 @@ class AuthController extends BaseController
         {
             return return_rest('0','','请输入密码');
         }
+        if($messages->has('user_name'))
+        {
+            return return_rest('0','','用户名已注册');
+        }
         //增加环信注册 失败返回false
-        $easemob = Easemob::user_register($this->request->get('mobile'),$this->request->get('password'));
+        $easemob = Easemob::user_register(base64_encode($this->request->get('user_name')),$this->request->get('password'));
         //TODO
         if(isset($easemob['mobile'])) return return_rest('0','','该用户已注册环信');
         //设置用户相关信息
@@ -114,6 +122,7 @@ class AuthController extends BaseController
         $type       = $this->request->has('type') ? $this->request->get('type') : 3;
         //TODO 其他信息
         $customer = new Customer;
+        $customer->user_name = $this->request->get('user_name');
         $customer->mobile   = $mobile;
         $customer->password = bcrypt($password);
         $customer->type     = $type;

@@ -109,6 +109,42 @@ class CustomerController extends BaseController
         $user['company'] = is_null($user['company']) ? "" : $user['company'];
         return return_rest('1',compact('user'),'获取成功');
     }
+    /**
+     * 根据用户名获取用户信息
+     */
+    public function detailByUserName()
+    {
+        $user_name = $this->request->get('user_name');
+        $user = $this->modelCustomer->select('id','name','mobile','avatar','nickname','brief','type','sex','email','address','company_id','position')
+            ->withOnly('company',array('id','name','website','finance_status','weixin','email'))
+            ->where('user_name',$user_name)
+            ->first();
+        if(!$user){
+            return return_rest('0','','该用户不存在');
+        }
+        $user = $user->toArray();
+        //如果用户为投资人 获取投资人相关字段
+        if($user['type'] == '2'){
+            //获取投资人信息
+            $user['investor'] = DB::table('customer_investor')->where('customer_id',$user['id'])->first();
+            $user['invest'] = DB::table('customer_invest_field')->where('customer_id',$user['id'])->get();
+            if(is_null($user['investor'])){
+                $user['investor'] = '';
+            }
+            if(count($user['invest']) == 0){
+                $user['invest'] = '';
+            }
+            //获取投资人公司
+            $user['company'] = DB::table('invest_company')->select('id','name','brief','website','weixin')->where('id',$user['company_id'])->first();
+        }
+        if(is_null($user['company'])){
+            $user['is_company'] = '0';
+        }else{
+            $user['is_company'] = '1';
+        }
+        $user['company'] = is_null($user['company']) ? "" : $user['company'];
+        return return_rest('1',compact('user'),'获取成功');
+    }
 
     /**
      * @api {put} /user 修改个人信息
