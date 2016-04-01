@@ -348,7 +348,6 @@ class CustomerController extends BaseController
     {
         //解析数据
         $lists = $this->request->input('list');
-
         $lists = json_decode($lists,true);
         $names = array();
         try{
@@ -509,5 +508,19 @@ class CustomerController extends BaseController
             return return_rest('1','','手机号码更新成功');
         }
         return return_rest('0','','手机号码更新失败');
+    }
+    /**
+     * 更换用户类型
+     */
+    public function changeType()
+    {
+        $type = $this->request->get('type');
+        $customer = $this->user();
+        if($customer->type != 3) return return_rest('0','','该用户类型错误,别逗了');
+        $customer->type = $type;
+        if($customer->save()){
+            return return_rest('1','','用户类型变更成功');
+        }
+        return return_rest('0','','崩源在这里,harry告诉你');
     }
 }
