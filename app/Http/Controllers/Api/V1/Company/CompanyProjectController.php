@@ -170,7 +170,8 @@ class CompanyProjectController extends BaseController
         }
         //获取项目信息
         $project = $this->project
-            ->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','subscribe_amount','currency','city','view','share')->where('company_id',$user->company_id)
+            ->select('id','name','logo','brief','finance_progress','company_id','target_amount','start_amount','get_out','subscribe','subscribe_amount','currency','city','view','share')
+            ->where('company_id',$user->company_id)
             ->with('field')
             ->first();
         if(is_null($project)) return return_rest('0','','该用户没有项目');

@@ -11,6 +11,7 @@ use \App\Http\Controllers\Api\BaseController;
 use App\Jobs\ChangeName;
 use App\Models\Company\Company;
 use App\Models\Company\CompanyExperience;
+use App\Models\Company\CompanyProject;
 use App\Models\Company\CompanyProjectFieldConfig;
 use App\Models\Customer;
 use App\Transformer\CustomerTransformer;
@@ -70,6 +71,12 @@ class CustomerController extends BaseController
             if(!is_null($user['company'])) $user['company']->finance_status = "";
         }
         $user['is_company'] = is_null($user['company']) ? '0' : '1';
+        //判断用户是否有项目
+        $user['is_project'] = '0';
+        if($user['is_company'] == '1' && $user['type'] == '1'){
+            $project = CompanyProject::where('company_id',$user['company_id'])->first();
+            if(!is_null($project)) $user['is_project'] = '1';
+        }
         $user['company'] = is_null($user['company']) ? "" : $user['company'];
         return return_rest('1',compact('user'),'获取成功');
     }
