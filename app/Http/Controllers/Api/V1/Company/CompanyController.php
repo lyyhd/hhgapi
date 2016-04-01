@@ -144,6 +144,9 @@ class CompanyController extends BaseController
             }else{
                 $company->field_id = $this->request->get('sub_field');
             }
+            //获取公司类型
+            $company->type = $this->request->get('type');
+
             $company->save();
             //增加公司详情
             $extend = new CompanyExtend();
@@ -158,14 +161,14 @@ class CompanyController extends BaseController
             $auth->company_id = $company->id;
             $auth->position = $this->request->get('position');
             $auth->position_detail = $this->request->get('position_detail');
-            $auth->start_year = $this->request->get('start_year');
-            $auth->start_month = $this->request->get('start_month');
+            $auth->start_year = $this->request->get('startYear');
+            $auth->start_month = $this->request->get('startMonth');
             $auth->is_today = $this->request->get('is_today');
             if($this->request->get('is_today') == 0){
-                $auth->end_year = $this->request->get('end_year') ? $this->request->get('end_year') : Carbon::now()->year;
-                $auth->end_mouth = $this->request->get('end_month') ? $this->request->get('end_month') : Carbon::now()->month;
+                $auth->end_year = $this->request->get('end_year') ? $this->request->get('endYear') : Carbon::now()->year;
+                $auth->end_mouth = $this->request->get('end_month') ? $this->request->get('endMonth') : Carbon::now()->month;
             }
-            $auth->company_name = $company->name();
+            $auth->company_name = $company->name;
             $auth->save();
             //更新用户公司信息
             Customer::where('id',$this->user()->id)->update([
@@ -183,13 +186,13 @@ class CompanyController extends BaseController
             $experience->endYear = $this->request->has('endYear') ? $this->request->has('endYear') : '';
             $experience->endMouth = $this->request->has('endMouth') ? $this->request->has('endMouth') : '';
             $experience->bizCardLink = $this->request->get('auth');
-            $experience->custsomer_id = $this->user()->id;
+            $experience->customer_id = $this->user()->id;
             $experience->save();
-            return return_rest('1','','公司添加成功');
             DB::commit();
+            return return_rest('1','','公司添加成功');
         }catch (\Exception $e) {
             DB::rollBack();
-            return return_rest('0','','公司添加失败');
+            return return_rest('0','',$e->getMessage());
         }
 
     }
