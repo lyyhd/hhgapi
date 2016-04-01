@@ -48,6 +48,7 @@ class CompanyController extends BaseController
             ->withOnly('address',['company_id','city'])
             ->withOnly('customer',['name'])
             ->withOnly('field',['name'])
+            ->orderBy('id','desc')
             ->where('status',1)
             ->paginate();
         return $this->response->paginator($company,new CompanyTransformer());
@@ -114,7 +115,8 @@ class CompanyController extends BaseController
         $query = Company::select('id','name','brief','logo','field_id')
             ->withOnly('customer',['id','company_id','name','position','avatar'])
             ->withOnly('field',['id','name'])
-            ->where('status',1);
+            ->where('status',1)
+            ->orderBy('id','desc');
         //判断搜索条件
         if($this->request->has('field') && $this->request->get('field') > 0)
         {
@@ -180,25 +182,29 @@ class CompanyController extends BaseController
             $auth->is_today = $this->request->get('is_today');
             if($this->request->get('is_today') == 0){
                 $auth->end_year = $this->request->get('end_year') ? $this->request->get('endYear') : Carbon::now()->year;
-                $auth->end_mouth = $this->request->get('end_month') ? $this->request->get('endMonth') : Carbon::now()->month;
+                $auth->end_month = $this->request->get('end_month') ? $this->request->get('endMonth') : Carbon::now()->month;
             }
+            $auth->bizCardLinkFile = $this->request->get('auth');
             $auth->company_name = $company->name;
             $auth->save();
             //更新用户公司信息
+            //创建公司 如果用户类型为3游客 变更为1创业者
             Customer::where('id',$this->user()->id)->update([
                 'company_id' => $company->id,
                 'position' => $this->request->get('position'),
                 'position_detail' => $this->request->get('position_detail'),
-                'is_company_creator'    => 1
+                'is_company_creator'    => 1,
+                'type'              => 1,
+                'type_state'        => 1
             ]);
             //添加创业经历
             $experience = new CompanyExperience();
             $experience->company_id = $company->id;
             $experience->startYear = $this->request->get('startYear');
-            $experience->startMouth = $this->request->get('startMouth');
+            $experience->startMouth = $this->request->get('startMonth');
             $experience->is_today = $this->request->get('is_today');
             $experience->endYear = $this->request->has('endYear') ? $this->request->has('endYear') : '';
-            $experience->endMouth = $this->request->has('endMouth') ? $this->request->has('endMouth') : '';
+            $experience->endMouth = $this->request->has('endMonth') ? $this->request->has('endMonth') : '';
             $experience->bizCardLink = $this->request->get('auth');
             $experience->customer_id = $this->user()->id;
             $experience->save();
