@@ -269,13 +269,13 @@ class CompanyProjectController extends BaseController
         //获取项目id
         $id = $this->request->get('id');
         //获取公司id
-        $company = CompanyProject::find($id);
+        $company = Company::find($id);
         if(!$company){
             return return_rest('0','','公司不存在');
         }
         $content = $this->request->get('content');
         //更新团队优势 团队介绍
-        $extend = CompanyExtend::where('company_id',$company->company_id)->first();
+        $extend = CompanyExtend::where('company_id',$company->id)->first();
         if(is_null($extend)){
             return return_rest('0','','更新失败');
         }
