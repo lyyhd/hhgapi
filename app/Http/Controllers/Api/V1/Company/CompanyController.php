@@ -146,7 +146,21 @@ class CompanyController extends BaseController
             }
             //获取公司类型
             $company->type = $this->request->get('type');
-
+            if($this->request->has('iphoneAppstoreLink')){
+                $company->iphoneAppstoreLink = $this->request->get('iphoneAppstoreLink');
+            }
+            if($this->request->has('androidLink')){
+                $company->androidLink = $this->request->get('androidLink');
+            }
+            if($this->request->has('website')){
+                $company->website = $this->request->get('website');
+            }
+            if($this->request->has('weixin')){
+                $company->weixin = $this->request->get('weixin');
+            }
+            if($this->request->has('operationStatus')){
+                $company->operationStatus = $this->request->get('operationStatus');
+            }
             $company->save();
             //增加公司详情
             $extend = new CompanyExtend();

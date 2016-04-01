@@ -166,6 +166,7 @@ class CompanyProjectController extends BaseController
         }
         if($user->company_id == 0){
             $project['is_company'] = '0';
+            $project['is_project'] = '0';
             return return_rest('1',compact('project'),'项目详情');
         }
         //获取项目信息
@@ -174,7 +175,7 @@ class CompanyProjectController extends BaseController
             ->where('company_id',$user->company_id)
             ->with('field')
             ->first();
-        if(is_null($project)) return return_rest('0','','该用户没有项目');
+        if(is_null($project)) return return_rest('0',array('is_company'=>'1','is_project'=>'0'),'该用户没有项目');
         $project = $project->toArray();
         //项目介绍
         $project_introduce = DB::table('company_project_detail')->where('company_project_id',$project['id'])->first();
@@ -193,6 +194,7 @@ class CompanyProjectController extends BaseController
             $project['teamAdvantage'] = $company_extend->story;
         }
         $project['is_company'] = '1';
+        $project['is_project'] = '1';
         //获取项目投资轮次
         $project_finance = DB::table('company_project_finance')
             ->where('project_id',$project['id'])
