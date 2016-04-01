@@ -426,6 +426,8 @@ class CustomerController extends BaseController
         $employmentExperience->position_detail = $this->request->get('position_detail');
         $employmentExperience->startYear = $this->request->get('startYear');
         $employmentExperience->startMouth = $this->request->get('startMouth');
+        $employmentExperience->endYear = $this->request->get('endYear');
+        $employmentExperience->endMouth = $this->request->get('endMouth');
         $employmentExperience->is_today = $this->request->get('is_today');
         $employmentExperience->save();
         return return_rest('1','','添加成功');

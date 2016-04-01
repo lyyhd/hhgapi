@@ -46,6 +46,7 @@ class CompanyController extends BaseController
             ->withOnly('address',['company_id','city'])
             ->withOnly('customer',['name'])
             ->withOnly('field',['name'])
+            ->where('status',1)
             ->paginate();
         return $this->response->paginator($company,new CompanyTransformer());
     }
@@ -108,7 +109,10 @@ class CompanyController extends BaseController
      */
     public function all()
     {
-        $query = Company::select('id','name','brief','logo','field_id')->withOnly('customer',['id','company_id','name','position','avatar'])->withOnly('field',['id','name']);
+        $query = Company::select('id','name','brief','logo','field_id')
+            ->withOnly('customer',['id','company_id','name','position','avatar'])
+            ->withOnly('field',['id','name'])
+            ->where('status',1);
         //判断搜索条件
         if($this->request->has('field') && $this->request->get('field') > 0)
         {
@@ -145,7 +149,12 @@ class CompanyController extends BaseController
         $extend->story = $this->request->get('story');
         $extend->save();
         //更新用户公司信息
-        Customer::where('id',$this->user()->id)->update(['company_id' => $company->id,'position' => $this->request->get('position'),'position_detail' => $this->request->get('position_detail')]);
+        Customer::where('id',$this->user()->id)->update([
+            'company_id' => $company->id,
+            'position' => $this->request->get('position'),
+            'position_detail' => $this->request->get('position_detail'),
+            'is_company_creator'    => 1
+        ]);
         //添加创业经历
         $experience = new CompanyExperience();
         $experience->company_id = $company->id;
