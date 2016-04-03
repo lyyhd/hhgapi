@@ -259,6 +259,14 @@ class CompanyController extends BaseController
         $this->company->find($id)->increment('view');
         return return_rest('1','','成功增加');
     }
+    //增加文章分享量
+    public function addShare()
+    {
+        $id = $this->request->get('id');
+
+        $this->company->find($id)->increment('share');
+        return return_rest('1','','分享量+1');
+    }
     //获取职位列表
     public function position()
     {
