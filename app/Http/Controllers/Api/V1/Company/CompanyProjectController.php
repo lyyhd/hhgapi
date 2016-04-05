@@ -531,7 +531,6 @@ class CompanyProjectController extends BaseController
         $interview['investor']['invest_field'] = DB::table('customer_invest_field')->select('invest_field_name as name')->where('customer_id',$interview['investor_id'])->get();
         //获取投资人拓展信息
         $interview_extend = Customer\CustomerInvestor::select('currency','amount','finance_round')->where('customer_id',$interview['investor_id'])->first();
-        dd($interview['investor_id']);
         $interview['investor']['finance_round'] = $this->financeName($interview_extend->finance_round);
         $interview['investor']['currency'] = $interview_extend->currency;
         $interview['investor']['amount'] = $interview_extend->amount;
