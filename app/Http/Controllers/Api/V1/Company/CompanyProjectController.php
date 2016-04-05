@@ -175,7 +175,7 @@ class CompanyProjectController extends BaseController
             ->where('company_id',$user->company_id)
             ->with('field')
             ->first();
-        if(is_null($project)) return return_rest('0',array('is_company'=>'1','is_project'=>'0'),'该用户没有项目');
+        if(is_null($project)) return return_rest('1',array('is_company'=>'1','is_project'=>'0'),'该用户没有项目');
         $project = $project->toArray();
         //项目介绍
         $project_introduce = DB::table('company_project_detail')->where('company_project_id',$project['id'])->first();
