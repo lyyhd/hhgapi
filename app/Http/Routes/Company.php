@@ -79,4 +79,14 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->post('company/project/collect', ['as' => 'company.project.postCollect', 'uses' => 'CompanyProjectController@doCollect']);
     //获取投资人收藏项目
     $api->get('company/project/loveList', 'CompanyProjectController@loveList')->name('company.project.loveList');
+    //创业者获取项目约谈记录
+    $api->get('company/project/interview/list','CompanyProjectController@interviewList')->name('company.project.interview.list');
+    //获取约谈记录详情
+    $api->get('company/project/interview/show','CompanyProjectController@interviewShow')->name('company.project.interview.show');
+    //获取该项目的投资人列表
+    $api->get('company/project/investor','CompanyProjectController@investor')->name('company.project.investor');
+    //获取项目投资人详情
+    $api->get('company/project/investor/show','CompanyProjectController@investorDetail')->name('company.project.investor.show');
+    //增加约谈记录
+    $api->post('company/project/interview/add','CompanyProjectController@interviewAdd')->name('company.project.interview.add');
 });

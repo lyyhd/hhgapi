@@ -18,6 +18,7 @@ use App\Models\Company\CompanyProject;
 use App\Models\Company\CompanyProjectDynamic;
 use App\Models\Company\CompanyProjectField;
 use App\Models\Company\CompanyProjectFieldConfig;
+use App\Models\Company\Project\Interview\Interview;
 use App\Models\Customer;
 use App\Models\Invest\InvestProject;
 use App\Models\Invest\InvestRoundConfig;
@@ -491,5 +492,128 @@ class CompanyProjectController extends BaseController
             return return_rest('1',compact('loveList'),'获取列表成功');
         }
         return return_rest('1',"",'用户暂未关注活动');
+    }
+    //约谈模块开始
+    /**
+     *获取项目约谈记录
+     */
+    public function interviewList()
+    {
+        $type = 0;
+        if($this->request->has('type')){
+            $type = $this->request->get('type');
+        }
+        $per_page = 15;
+        if($this->request->has('per_page')){
+            $per_page = $this->request->get('per_page');
+        }
+        $project_id = $this->request->get('project_id');
+        //$customer = $this->user();
+        //获取项目约谈记录
+        $interview = Interview::where('project_id',$project_id)->where('state',$type)
+            ->withOnly('investor',array('id','avatar','user_name','name','company_id'))
+            ->paginate($per_page)->toArray();
+        if($interview['total'] == 0) return return_rest('1',compact('interview'),'暂无记录');
+        return return_rest('1',compact('interview'),'约谈记录');
+    }
+    /**
+     * 获取约谈记录详情
+     */
+    public function interViewShow()
+    {
+        $interview_id = $this->request->get('id');
+        $interview = Interview::select('id','investor_id','interview_date','interview_time','interview_address','interview_desc')->find($interview_id);
+        if(is_null($interview)) return return_rest('0',array('interview'=>array()),'该记录不存在');
+        $interview = $interview->toArray();
+        //获取投资人信息
+        $interview['investor'] = Customer::select('id','name','user_name','avatar','brief')->find($interview['investor_id']);
+        //获取投资人投资领域
+        $interview['investor']['invest_field'] = DB::table('customer_invest_field')->select('invest_field_name as name')->where('customer_id',$interview['investor_id'])->get();
+        //获取投资人拓展信息
+        $interview_extend = Customer\CustomerInvestor::select('currency','amount','finance_round')->where('customer_id',$interview['investor_id'])->first();
+        $interview['investor']['finance_round'] = $this->financeName($interview_extend->finance_round);
+        $interview['investor']['currency'] = $interview_extend->currency;
+        $interview['investor']['amount'] = $interview_extend->amount;
+        //获取该用户投资的项目
+        $invest_projects = InvestProject::where('customer_id',$interview['investor_id'])->get();
+        $interview['investor']['invest_project'] = array();
+        if(($interview['investor']['invest_project_count'] = count($invest_projects)) > 0){
+            $invest_projects = $invest_projects->toArray();
+            //获取用户投资的项目
+            $i = 0;
+            foreach($invest_projects as $project){
+                $project_detail = CompanyProject::find($project['project_id']);
+                $list[$i] = $project_detail->toArray();
+                $i++;
+            }
+            $interview['investor']['invest_project'] = $list;
+        }
+        return return_rest('1',compact('interview'),'约谈详情');
+    }
+    //获取该项目的投资人列表
+    public function investor()
+    {
+        $project_id = $this->request->get('id');
+        //获取投资记录 得到投资人id
+        $investors = InvestProject::where('project_id',$project_id)->get();
+        if(count($investors) == 0) return return_rest('1',array('investor'=>array()),'该项目暂无人投资');
+        $i = 0;
+        foreach($investors as $investor){
+            $list[$i] = Customer::select('id','user_name','name','avatar')->find($investor->customer_id)->toArray();
+            //获取投资人投资领域
+            $list[$i]['invest_field'] = DB::table('customer_invest_field')->select('invest_field_name as name')->where('customer_id',$investor->customer_id)->get();
+            //获取投资人拓展信息
+            $interview_extend = Customer\CustomerInvestor::select('currency','amount','finance_round')->where('customer_id',$investor->customer_id)->first();
+            $list[$i]['finance_round'] = $this->financeName($interview_extend->finance_round);
+            $i++;
+        }
+        $investor = $list;
+        return return_rest('1',compact('investor'),'项目投资人列表');
+    }
+    //获取项目投资人详情
+    public function investorDetail()
+    {
+        $customer_id = $this->request->get('id');
+        //获取投资人信息
+        $investor = Customer::select('id','name','user_name','avatar','brief')->find($customer_id);
+        //获取投资人投资领域
+        $investor['invest_field'] = DB::table('customer_invest_field')->select('invest_field_name as name')->where('customer_id',$customer_id)->get();
+        //获取投资人拓展信息
+        $interview_extend = Customer\CustomerInvestor::select('currency','amount','finance_round')->where('customer_id',$customer_id)->first();
+        $investor['finance_round'] = $this->financeName($interview_extend->finance_round);
+        $investor['currency'] = $interview_extend->currency;
+        $investor['amount'] = $interview_extend->amount;
+        //获取该用户投资的项目
+        $invest_projects = InvestProject::where('customer_id',$customer_id)->get();
+        $investor['invest_project'] = array();
+        if(($investor['invest_project_count'] = count($invest_projects)) > 0){
+            $invest_projects = $invest_projects->toArray();
+            //获取用户投资的项目
+            $i = 0;
+            foreach($invest_projects as $project){
+                $project_detail = CompanyProject::find($project['project_id']);
+                $list[$i] = $project_detail->toArray();
+                $i++;
+            }
+            $investor['invest_project'] = $list;
+        }
+        return return_rest('1',compact('investor'),'投资人详情');
+    }
+    /**
+     * 增加约谈记录
+     */
+    public function interviewAdd(){
+        $interview = new Interview();
+        //获取约谈字段
+        $interview->investor_id = $this->user()->id;
+        $interview->project_id = $this->request->get('project_id');
+        $interview->interview_date = $this->request->get('date');
+        $interview->interview_time = $this->request->get('time');
+        $interview->interview_address = $this->request->get('address');
+        $interview->interview_desc = $this->request->get('desc');
+        if($interview->save()){
+            return return_rest('1','','提交成功');
+        }
+        return return_rest('0','','提交失败,约harry');
     }
 }

@@ -50,4 +50,14 @@ class Customer extends BaseModel implements AuthenticatableContract
     {
         return $this->belongsToMany('App\Models\Company\CompanyProject','invest_project','customer_id','project_id');
     }
+    //获取投资人的公司
+    public function investorCompany()
+    {
+        return $this->hasOne('App\Models\Invest\InvestCompany','id','company_id');
+    }
+    //获取投资人的公司名称
+    public function investorCompanyName()
+    {
+        return $this->hasOne('App\Models\Invest\InvestCompany','id','company_id')->select('id','name');
+    }
 }

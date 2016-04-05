@@ -13,6 +13,7 @@ use App\Models\Company\Company;
 use App\Models\Company\CompanyExperience;
 use App\Models\Company\CompanyProject;
 use App\Models\Company\CompanyProjectFieldConfig;
+use App\Models\Company\Project\Interview\Interview;
 use App\Models\Customer;
 use App\Transformer\CustomerTransformer;
 use Goodspb\LaravelEasemob\Facades\Easemob;
@@ -522,5 +523,15 @@ class CustomerController extends BaseController
             return return_rest('1','','用户类型变更成功');
         }
         return return_rest('0','','崩源在这里,harry告诉你');
+    }
+    //投资人约谈记录
+    /**
+     * 投资人获取约谈记录
+     */
+    public function interview()
+    {
+        //获取用户约谈记录
+        $interview = Interview::where('investor_id',$this->user()->id)->get();
+        return return_rest('1',compact('interview'),'约谈记录');
     }
 }

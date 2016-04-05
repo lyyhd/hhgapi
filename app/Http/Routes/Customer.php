@@ -24,4 +24,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->post('customer/changeMobile','CustomerController@changeMobile')->name('customer.changeMobile');
     //更改用户类型
     $api->put('customer/changeType','CustomerController@changeType')->name('customer.changeType');
+    //获取投资人约谈记录
+    $api->get('customer/interview/list','CustomerController@interview')->name('customer.interview.list');
 });
