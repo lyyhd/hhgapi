@@ -513,6 +513,10 @@ class CompanyProjectController extends BaseController
         $interview = Interview::where('project_id',$project_id)->where('state',$type)
             ->withOnly('investor',array('id','avatar','user_name','name','company_id'))
             ->paginate($per_page)->toArray();
+        //获取每种类型的数量
+        $interview['count_0'] = Interview::where('project_id',$project_id)->where('state',0)->count();
+        $interview['count_1'] = Interview::where('project_id',$project_id)->where('state',1)->count();
+        $interview['count_2'] = Interview::where('project_id',$project_id)->where('state',2)->count();
         if($interview['total'] == 0) return return_rest('1',compact('interview'),'暂无记录');
         return return_rest('1',compact('interview'),'约谈记录');
     }
