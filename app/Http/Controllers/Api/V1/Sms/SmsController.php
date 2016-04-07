@@ -188,7 +188,7 @@ class SmsController extends BaseController
         //设置过期时间
         $deadline_time += time();
         \SmsManager::storeSentInfo($smsToken,compact('mobile','code','deadline_time'));
-        $code = '1314';
+//        $code = '1314';
         return compact('smsToken','code');
     }
 }
