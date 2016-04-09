@@ -89,4 +89,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->get('company/project/investor/show','CompanyProjectController@investorDetail')->name('company.project.investor.show');
     //增加约谈记录
     $api->post('company/project/interview/add','CompanyProjectController@interviewAdd')->name('company.project.interview.add');
+    //对约谈进行操作
+    $api->post('company/project/interview/do','CompanyProjectController@interviewDo')->name('company.project.interview.do');
 });

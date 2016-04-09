@@ -26,4 +26,6 @@ $api->group(['middleware' => 'jwt.auth'], function ($api) {
     $api->put('customer/changeType','CustomerController@changeType')->name('customer.changeType');
     //获取投资人约谈记录
     $api->get('customer/interview/list','CustomerController@interview')->name('customer.interview.list');
+    //获取用户审核状态
+    $api->get('customer/typeState','CustomerController@typeState')->name('customer.typeState');
 });

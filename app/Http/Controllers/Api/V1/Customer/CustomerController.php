@@ -530,8 +530,20 @@ class CustomerController extends BaseController
      */
     public function interview()
     {
+        $project_id = $this->request->get('project_id');
         //获取用户约谈记录
-        $interview = Interview::where('investor_id',$this->user()->id)->get();
+        $interview = Interview::where('investor_id',$this->user()->id)->where('project_id',$project_id)->get();
         return return_rest('1',compact('interview'),'约谈记录');
+    }
+    /**
+     * 查看用户审核状态
+     */
+    public function typeState()
+    {
+        $name = $this->user()->name;
+        $user_name = $this->user()->user_name;
+        $type_state = $this->user()->type_state;
+        $avatar = $this->user()->avatar;
+        return return_rest('1',compact('name','user_name','type_state','avatar'),'获取用户审核状态');
     }
 }

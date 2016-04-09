@@ -34,7 +34,7 @@ class AuthController extends BaseController
 //                //$validator->errors()->add('error_msg', '用户名或密码错误');
 //                return $this->errorBadRequest(return_rest('0','','用户名或密码错误','10021'));
 //            });
-            return return_rest('0',array('token'=>'','customer'=>array('id'=>'','avatar'=>'','type'=>'','nickname'=>'','name'=>'','user_name','mobile')),'用户名或密码错误');
+            return return_rest('0',array('token'=>'','customer'=>array('id'=>'','avatar'=>'','type'=>'','nickname'=>'','name'=>'','user_name'=>'','mobile'=>'')),'用户名或密码错误');
         }
 
         if ($validator->fails()) {

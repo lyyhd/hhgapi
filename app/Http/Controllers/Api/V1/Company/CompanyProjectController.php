@@ -620,4 +620,17 @@ class CompanyProjectController extends BaseController
         }
         return return_rest('0','','提交失败,约harry');
     }
+    /**
+     * 约谈操作
+     */
+    public function interviewDo(){
+        $id = $this->request->get('id');
+        $state = $this->request->get('state');
+        $interview = Interview::find($id);
+        $interview->state = $state;
+        if($interview->save()){
+            return return_rest('1','','操作成功');
+        }
+        return return_rest('0','','操作失败');
+    }
 }
