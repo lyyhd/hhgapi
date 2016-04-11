@@ -95,7 +95,7 @@ class CompanyProjectController extends BaseController
         }
         $project = $project->toArray();
         //获取项目创世人 联合创始人
-        $project['customer'] = Customer::where('company_id',$project['company_id'])->select('id','name','position','avatar','mobile','user_name','is_creator')->get()->toArray();
+        $project['customer'] = Customer::where('company_id',$project['company_id'])->select('id','name','position','avatar','mobile','user_name','is_company_creator')->get()->toArray();
         //获取项目优势
         $project['teamAdvantage'] = "";
         $company_extend = DB::table('company_extend')->select('story')->where('company_id',$project['company_id'])->first();
