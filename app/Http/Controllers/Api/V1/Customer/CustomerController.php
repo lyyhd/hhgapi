@@ -65,7 +65,7 @@ class CustomerController extends BaseController
                 $user['investor'] = '';
             }
             if(count($user['invest']) == 0){
-                $user['invest'] = '';
+                $user['invest'] = array();
             }
             //获取投资人公司
             $user['company'] = DB::table('invest_company')->select('id','name','brief','website','weixin')->where('id',$user['company_id'])->first();
@@ -104,7 +104,7 @@ class CustomerController extends BaseController
                 $user['investor'] = '';
             }
             if(count($user['invest']) == 0){
-                $user['invest'] = '';
+                $user['invest'] = array();
             }
             //获取投资人公司
             $user['company'] = DB::table('invest_company')->select('id','name','brief','website','weixin')->where('id',$user['company_id'])->first();
@@ -141,7 +141,7 @@ class CustomerController extends BaseController
                 $user['investor'] = '';
             }
             if(count($user['invest']) == 0){
-                $user['invest'] = '';
+                $user['invest'] = array();
             }
             //获取投资人公司
             $user['company'] = DB::table('invest_company')->select('id','name','brief','website','weixin')->where('id',$user['company_id'])->first();
