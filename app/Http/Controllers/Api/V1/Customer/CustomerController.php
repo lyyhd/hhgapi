@@ -62,7 +62,7 @@ class CustomerController extends BaseController
             $user['investor'] = DB::table('customer_investor')->where('customer_id',$user['id'])->first();
             $user['invest'] = DB::table('customer_invest_field')->where('customer_id',$user['id'])->get();
             if(is_null($user['investor'])){
-                $user['investor'] = '';
+                $user['investor'] = array();
             }
             if(count($user['invest']) == 0){
                 $user['invest'] = array();
@@ -101,7 +101,7 @@ class CustomerController extends BaseController
             $user['investor'] = DB::table('customer_investor')->where('customer_id',$user['id'])->first();
             $user['invest'] = DB::table('customer_invest_field')->where('customer_id',$user['id'])->get();
             if(is_null($user['investor'])){
-                $user['investor'] = '';
+                $user['investor'] = array();
             }
             if(count($user['invest']) == 0){
                 $user['invest'] = array();
@@ -138,7 +138,7 @@ class CustomerController extends BaseController
             $user['investor'] = DB::table('customer_investor')->where('customer_id',$user['id'])->first();
             $user['invest'] = DB::table('customer_invest_field')->where('customer_id',$user['id'])->get();
             if(is_null($user['investor'])){
-                $user['investor'] = '';
+                $user['investor'] = array();
             }
             if(count($user['invest']) == 0){
                 $user['invest'] = array();

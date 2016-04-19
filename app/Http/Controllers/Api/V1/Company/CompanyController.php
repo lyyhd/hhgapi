@@ -74,6 +74,13 @@ class CompanyController extends BaseController
         return return_rest('1',compact('company'),'获取公司详情');
 
     }
+    //获取公司团队成员
+    public function team()
+    {
+        //获取团队介绍
+        $team = Customer::select('id','user_name','name','avatar','is_company_creator','position','position_detail','brief')->where('company_id',$id)->get()->toArray();
+        return return_rest('1',compact('team'),'获取团队成员');
+    }
 
     //获取我的项目
 //    public function
@@ -112,7 +119,7 @@ class CompanyController extends BaseController
      */
     public function all()
     {
-        $query = Company::select('id','name','brief','logo','field_id')
+        $query = Company::select('id','name','brief','logo','field_id','address')
             ->withOnly('customer',['id','company_id','name','position','avatar'])
             ->withOnly('field',['id','name'])
             ->where('status',1)
