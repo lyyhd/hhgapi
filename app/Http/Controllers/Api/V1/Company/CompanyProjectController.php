@@ -43,7 +43,7 @@ class CompanyProjectController extends BaseController
         if($this->request->has('per_page')){
             $per_page = $this->request->get('per_page');
         }
-        $query = $this->project->select('id','name','logo','finance_progress','brief','subscribe_amount');
+        $query = $this->project->select('id','name','logo','finance_progress','brief','subscribe_amount','end_at');
         //获取搜索条件
         if($this->request->has('field')){
             $query->whereHas('field', function($q)

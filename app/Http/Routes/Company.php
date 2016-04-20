@@ -40,6 +40,8 @@ $api->get('company/view','CompanyController@view')->name('company.view');
 $api->post('company/share','CompanyController@addShare')->name('company.addShare');
 //获取职位列表
 $api->get('company/position','CompanyController@position')->name('company.position');
+//获取团队成员
+$api->get('company/team','CompanyController@team')->name('company.team');
 
 
 /*
